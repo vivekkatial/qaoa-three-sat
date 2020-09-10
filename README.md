@@ -1,7 +1,7 @@
-qaoa-three-sat
+QAOA 3SAT
 ==============================
 
-An implementation for solvinng 3SAT (Exact Cover) using the Quantum Approximate Optimization Algorithm
+An implementation for solving 3SAT (Exact Cover) using the Quantum Approximate Optimization Algorithm
 
 Project Organization
 ------------
@@ -54,4 +54,3 @@ Project Organization
 
 --------
 
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
