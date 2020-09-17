@@ -26,7 +26,6 @@ def calculate_rotation_angle_theta(alpha, r_coeff):
     """
     theta = -2*alpha*r_coeff
     return theta
-    
 
 def initiate_circuit(n_qubits):
     """A function to initiate circuit as a qiskit QC circuit object.
@@ -64,27 +63,26 @@ def build_qc_circuit(instance, alpha, beta, init=True, qc=None):
         qc = initiate_circuit(instance['n_qubits'])
 
     # Apply single qubit rotations
-    for qubit in instance['single_qubit']['rotations']:
+    for qubit in instance['single_qubit']['rotations'][0]:
         theta = calculate_rotation_angle_theta(alpha, qubit['coefficient'])
-        qc.rz(theta, qubit['qubit'])
-
+        qc.rz(theta, qubit['qubits'][0])
 
     # Apply Two qubit rotations
-    for qubit in instance['double_qubit']['rotations']:
+    for qubit in instance['double_qubit']['rotations'][0]:
         theta = calculate_rotation_angle_theta(alpha, qubit['coefficient'])
         # Apply on Gate Z_1 Z_2
-        qc.cx(qubit['qubit'][0],qubit['qubit'][1])
-        qc.rz(theta, qubit['qubit'][1])
-        qc.cx(qubit['qubit'][0],qubit['qubit'][1])
+        qc.cx(qubit['qubits'][0],qubit['qubits'][1])
+        qc.rz(theta, qubit['qubits'][1])
+        qc.cx(qubit['qubits'][0],qubit['qubits'][1])
 
     # Apply 3 qubit rotations
-    for qubit in instance['triple_qubit']['rotations']:
+    for qubit in instance['triple_qubit']['rotations'][0]:
         theta = calculate_rotation_angle_theta(alpha, qubit['coefficient'])
-        qc.cx(qubit['qubit'][0],qubit['qubit'][1])
-        qc.cx(qubit['qubit'][1],qubit['qubit'][2])
-        qc.rz(theta, qubit['qubit'][2])
-        qc.cx(qubit['qubit'][1],qubit['qubit'][2])
-        qc.cx(qubit['qubit'][0],qubit['qubit'][1])
+        qc.cx(qubit['qubits'][0],qubit['qubits'][1])
+        qc.cx(qubit['qubits'][1],qubit['qubits'][2])
+        qc.rz(theta, qubit['qubits'][2])
+        qc.cx(qubit['qubits'][1],qubit['qubits'][2])
+        qc.cx(qubit['qubits'][0],qubit['qubits'][1])
 
     qc.barrier()
     
