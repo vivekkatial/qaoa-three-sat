@@ -1,13 +1,18 @@
-from qiskit import Aer, IBMQ
-from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, execute
-from rotations import Rotations
-from qc_helpers import calculate_rotation_angle_theta, load_raw_instance, clean_instance
+"""
+This code contains the main Instance Class for QAOA 3SAT
+
+Author: Vivek Katial
+"""
+
 from math import pi
 
-import json
+from qiskit import Aer, IBMQ
+from qiskit import QuantumCircuit, execute
+from rotations import Rotations
+from qc_helpers import calculate_rotation_angle_theta, load_raw_instance, clean_instance
 
 
-class QAOAInstance3SAT(object):
+class QAOAInstance3SAT:
     """This class is a generic class for an instance of QAOA 3SAT and
     it consists of all the base methods needed for our circuit evolution
 
@@ -53,7 +58,7 @@ class QAOAInstance3SAT(object):
 
         # Metric settings
 
-        self.qc = None
+        self.quantum_circuit = None
         self.energy = 0
 
     def initiate_circuit(self):
@@ -66,17 +71,17 @@ class QAOAInstance3SAT(object):
         :rtype: qiskit.circuit.quantumcircuit.QuantumCircuit
         """
         self.circuit_init = True
-        self.qc = QuantumCircuit(self.n_qubits, self.n_qubits)
-        self.qc.h(range(self.n_qubits))
-        self.qc.barrier()
-        return self.qc
+        self.quantum_circuit = QuantumCircuit(self.n_qubits, self.n_qubits)
+        self.quantum_circuit.h(range(self.n_qubits))
+        self.quantum_circuit.barrier()
+        return self.quantum_circuit
 
     def add_single_rotations(self):
         """ Adding single qubit rotations to circuit"""
         # Apply single qubit rotations
         for qubit in self.single_rotations.rotations:
             theta = calculate_rotation_angle_theta(self.alpha[0], qubit["coefficient"])
-            self.qc.rz(theta, qubit["qubits"][0])
+            self.quantum_circuit.rz(theta, qubit["qubits"][0])
 
     def add_double_rotations(self):
         """ Adding two qubit rotations to circuit"""
@@ -85,9 +90,9 @@ class QAOAInstance3SAT(object):
         for qubit in self.double_rotations.rotations:
             theta = calculate_rotation_angle_theta(self.alpha[0], qubit["coefficient"])
             # Apply on Gate Z_i Z_j
-            self.qc.cx(qubit["qubits"][0], qubit["qubits"][1])
-            self.qc.rz(theta, qubit["qubits"][1])
-            self.qc.cx(qubit["qubits"][0], qubit["qubits"][1])
+            self.quantum_circuit.cx(qubit["qubits"][0], qubit["qubits"][1])
+            self.quantum_circuit.rz(theta, qubit["qubits"][1])
+            self.quantum_circuit.cx(qubit["qubits"][0], qubit["qubits"][1])
 
     def add_triple_rotations(self, alpha):
         """Adding three qubit rotation terms into circuit"""
@@ -95,30 +100,38 @@ class QAOAInstance3SAT(object):
         # Apply 3 qubit rotations
         for qubit in self.triple_rotations.rotations:
             theta = calculate_rotation_angle_theta(alpha, qubit["coefficient"])
-            self.qc.cx(qubit["qubits"][0], qubit["qubits"][1])
-            self.qc.cx(qubit["qubits"][1], qubit["qubits"][2])
-            self.qc.rz(theta, qubit["qubits"][2])
-            self.qc.cx(qubit["qubits"][1], qubit["qubits"][2])
-            self.qc.cx(qubit["qubits"][0], qubit["qubits"][1])
+            self.quantum_circuit.cx(qubit["qubits"][0], qubit["qubits"][1])
+            self.quantum_circuit.cx(qubit["qubits"][1], qubit["qubits"][2])
+            self.quantum_circuit.rz(theta, qubit["qubits"][2])
+            self.quantum_circuit.cx(qubit["qubits"][1], qubit["qubits"][2])
+            self.quantum_circuit.cx(qubit["qubits"][0], qubit["qubits"][1])
 
     def close_round(self, beta):
         """
         Closing the round of a quantum circuit (then measuring)
         """
-        self.qc.barrier()
+        self.quantum_circuit.barrier()
         # Apply X rotations
-        self.qc.rx(beta, range(self.n_qubits))
-        self.qc.barrier()
-        self.qc.measure(range(self.n_qubits), range(self.n_qubits))
+        self.quantum_circuit.rx(beta, range(self.n_qubits))
+        self.quantum_circuit.barrier()
+        self.quantum_circuit.measure(range(self.n_qubits), range(self.n_qubits))
 
     def simulate_circuit(self):
-        self.statevector = execute(self.qc, self.backend).result().get_statevector()
+        """
+        Simulate the quantum circuit and get the corresponding statevector
+        """
+        self.statevector = (
+            execute(self.quantum_circuit, self.backend).result().get_statevector()
+        )
 
-    def optimize_circuit(self):
+    def optimise_circuit(self):
+        """
+        Method to optimise the circuit
+        """
         pass
 
     def measure_energy(self):
-        pass
-
-    def build_hamiltonian(self):
+        """
+        Calculate circuit energy
+        """
         pass

@@ -32,6 +32,9 @@ class Rotations(object):
         return interactions
 
     def build_hamiltonian(self):
+        """
+        A function for building Hamiltonians
+        """
 
         curr = 1
         #        for term in range(n_qubits):

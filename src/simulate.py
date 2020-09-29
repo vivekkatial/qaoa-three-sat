@@ -1,3 +1,7 @@
+"""
+
+Author: Vivek Katial
+"""
 from instance import QAOAInstance3SAT
 from qc_helpers import calculate_rotation_angle_theta, load_raw_instance, clean_instance
 from rotations import Rotations
@@ -31,7 +35,7 @@ def main():
     instance.add_triple_rotations(instance.alpha[0])
     instance.close_round(instance.beta[0])
 
-    print(instance.qc)
+    print(instance.quantum_circuit)
     instance.simulate_circuit()
     print(instance.statevector)
     X = single_rotations.build_hamiltonian()
