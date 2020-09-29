@@ -6,6 +6,7 @@ Author: Vivek Katial
 
 from math import pi
 
+import numpy as np
 from qiskit import Aer, IBMQ
 from qiskit import QuantumCircuit, execute
 from rotations import Rotations
@@ -55,6 +56,7 @@ class QAOAInstance3SAT:
         self.n_rounds = n_rounds
         self.backend = backend
         self.statevector = None
+        self.hamiltonian = None
 
         # Metric settings
 
@@ -124,14 +126,29 @@ class QAOAInstance3SAT:
             execute(self.quantum_circuit, self.backend).result().get_statevector()
         )
 
+    def build_hamiltonian(self):
+        """
+        Calculate circuit energy
+        """
+        self.single_rotations.build_hamiltonian()
+        self.double_rotations.build_hamiltonian()
+        self.triple_rotations.build_hamiltonian()
+        # Build circuit Hamiltonian
+        self.hamiltonian = (
+            self.single_rotations.hamiltonian
+            + self.double_rotations.hamiltonian
+            + self.triple_rotations.hamiltonian
+        )
+
     def optimise_circuit(self):
         """
         Method to optimise the circuit
         """
-        pass
+        self.energy = self.energy
 
     def measure_energy(self):
         """
         Calculate circuit energy
         """
-        pass
+        ham_state = np.matmul(self.hamiltonian, self.statevector)
+        self.energy = np.dot(ham_state, np.conjugate(self.statevector))

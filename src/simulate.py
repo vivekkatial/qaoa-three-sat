@@ -1,4 +1,4 @@
-"""
+"""Sample simulation script
 
 Author: Vivek Katial
 """
@@ -38,8 +38,10 @@ def main():
 
     print(instance.quantum_circuit)
     instance.simulate_circuit()
-    print(instance.statevector)
-    state = single_rotations.build_hamiltonian()
+    instance.build_hamiltonian()
+    instance.measure_energy()
+    print(instance.energy)
+    print(instance.hamiltonian)
 
 
 if __name__ == "__main__":
