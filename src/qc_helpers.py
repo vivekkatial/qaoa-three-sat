@@ -11,6 +11,99 @@ from qiskit.tools.monitor import job_monitor
 from qiskit.visualization import plot_histogram
 
 from math import pi
+import json
+
+import numpy as np
+import math
+import cmath
+
+####################################################
+# Pauli Matrices
+####################################################
+
+def pI():
+    '''Pauli I'''
+    return np.array([[1, 0], [0, 1]])
+
+def sparse_pI():
+    '''Sparse Pauli I'''
+    return sparse.csr_matrix(np.array([[1, 0], [0, 1]]))
+
+def pX():
+    '''Pauli X'''
+    return np.array([[0, 1],
+                    [1, 0]])
+
+def sparse_pX():
+    '''Sparse Pauli I'''
+    return sparse.csr_matrix(np.array([[0, 1], [1, 0]]))
+
+def pXi(i,state):
+    '''Pauli X acting on qubit i'''
+    state[i] = np.dot(pX(),state[i])
+    return state
+
+def pY():
+    '''Pauli Y'''
+    return np.array([[0, complex(0,-1)],
+                    [complex(0,1), 0]])
+
+def pYi(i,state):
+    '''Pauli Y operating on qubit i'''
+    state[i] = np.dot(pY(),state[i])
+    return state
+
+def pZ():
+    '''Pauli Z'''
+    return np.array([[1, 0],
+                    [0, -1]])
+
+def pZi(i,state):
+    '''Paulis Z operating on qubit i'''
+    state[i] = np.dot(pZ(),state[i])
+    return state
+
+def pH():
+    '''Hadamard Matrix'''
+    return (1/np.sqrt(2))*np.array([[1, 1],
+                                    [1, -1]])
+
+
+def s0():
+    '''|0> State'''
+    return np.array([[1],[0]])
+def s1():
+    '''|1> State'''
+    return np.array([[0],[1]])
+def plus():
+    '''|+> State'''
+    return np.dot(pH(),s0())
+def minus():
+    '''|-> State'''
+    return np.dot(pH(),s1())
+
+def pT():
+    return np.array([[1, 0],
+                    [0, math.e**(complex(0,1)*math.pi/4)]])
+
+####################################################
+# Simulation Helpers
+####################################################
+
+def load_raw_instance(instance_file):
+    with open(instance_file) as instance_file:
+        instance = json.load(instance_file)
+    return instance
+
+def clean_instance(raw_instance):
+
+    n_qubits = raw_instance["n_qubits"]
+    single_rotations = raw_instance["single_qubit"]["rotations"][0]
+    double_rotations = raw_instance["double_qubit"]["rotations"][0]
+    triple_rotations = raw_instance["triple_qubit"]["rotations"][0]
+
+    return n_qubits, single_rotations, double_rotations, triple_rotations
+
 
 
 def calculate_rotation_angle_theta(alpha, r_coeff):
