@@ -9,18 +9,20 @@ def main():
 
     raw_instance = load_raw_instance(instance_file)
 
-    n_qubits, single_rotations, double_rotations, triple_rotations = clean_instance(raw_instance)
+    n_qubits, single_rotations, double_rotations, triple_rotations = clean_instance(
+        raw_instance
+    )
 
-    single_rotations = Rotations(single_rotations)
-    double_rotations = Rotations(double_rotations)
-    triple_rotations = Rotations(triple_rotations)
+    single_rotations = Rotations(single_rotations, n_qubits)
+    double_rotations = Rotations(double_rotations, n_qubits)
+    triple_rotations = Rotations(triple_rotations, n_qubits)
 
     instance = QAOAInstance3SAT(
-        n_qubits=3,
-        single_rotations = single_rotations,
-        double_rotations = double_rotations,
-        triple_rotations = triple_rotations
-        )
+        n_qubits=n_qubits,
+        single_rotations=single_rotations,
+        double_rotations=double_rotations,
+        triple_rotations=triple_rotations,
+    )
 
     instance.initiate_circuit()
 
@@ -32,10 +34,8 @@ def main():
     print(instance.qc)
     instance.simulate_circuit()
     print(instance.statevector)
-    help(instance)
+    X = single_rotations.build_hamiltonian()
 
 
-    
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

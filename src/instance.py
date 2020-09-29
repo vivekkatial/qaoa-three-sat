@@ -8,7 +8,7 @@ import json
 
 
 class QAOAInstance3SAT(object):
-    """ This class is a generic class for an instance of QAOA 3SAT and
+    """This class is a generic class for an instance of QAOA 3SAT and
     it consists of all the base methods needed for our circuit evolution
 
     Attributes:
@@ -20,24 +20,23 @@ class QAOAInstance3SAT(object):
         beta (list:float): A list of angle values for \beta
         n_rounds (int): The number of rounds experiment runs for
         backend (object): An object representing where the simulation will run
-    
+
     Todo:
         - Add functionality for multiple rounds (need to parmaterise more alpha/beta)
 
     """
 
     def __init__(
-        self, 
-        n_qubits, 
-        single_rotations, 
-        double_rotations, 
+        self,
+        n_qubits,
+        single_rotations,
+        double_rotations,
         triple_rotations,
-        alpha=[pi/2],
+        alpha=[pi / 2],
         beta=[0],
         n_rounds=1,
-        backend = Aer.get_backend('statevector_simulator')
-        ):
-
+        backend=Aer.get_backend("statevector_simulator"),
+    ):
 
         self.n_qubits = n_qubits
         self.single_rotations = single_rotations
@@ -51,7 +50,6 @@ class QAOAInstance3SAT(object):
         self.n_rounds = n_rounds
         self.backend = backend
         self.statevector = None
-
 
         # Metric settings
 
@@ -77,31 +75,31 @@ class QAOAInstance3SAT(object):
         """ Adding single qubit rotations to circuit"""
         # Apply single qubit rotations
         for qubit in self.single_rotations.rotations:
-            theta = calculate_rotation_angle_theta(self.alpha[0], qubit['coefficient'])
-            self.qc.rz(theta, qubit['qubits'][0])
+            theta = calculate_rotation_angle_theta(self.alpha[0], qubit["coefficient"])
+            self.qc.rz(theta, qubit["qubits"][0])
 
     def add_double_rotations(self):
         """ Adding two qubit rotations to circuit"""
 
         # Apply double qubit rotations
         for qubit in self.double_rotations.rotations:
-            theta = calculate_rotation_angle_theta(self.alpha[0], qubit['coefficient'])
+            theta = calculate_rotation_angle_theta(self.alpha[0], qubit["coefficient"])
             # Apply on Gate Z_i Z_j
-            self.qc.cx(qubit['qubits'][0],qubit['qubits'][1])
-            self.qc.rz(theta, qubit['qubits'][1])
-            self.qc.cx(qubit['qubits'][0],qubit['qubits'][1])
+            self.qc.cx(qubit["qubits"][0], qubit["qubits"][1])
+            self.qc.rz(theta, qubit["qubits"][1])
+            self.qc.cx(qubit["qubits"][0], qubit["qubits"][1])
 
     def add_triple_rotations(self, alpha):
         """Adding three qubit rotation terms into circuit"""
 
         # Apply 3 qubit rotations
         for qubit in self.triple_rotations.rotations:
-            theta = calculate_rotation_angle_theta(alpha, qubit['coefficient'])
-            self.qc.cx(qubit['qubits'][0],qubit['qubits'][1])
-            self.qc.cx(qubit['qubits'][1],qubit['qubits'][2])
-            self.qc.rz(theta, qubit['qubits'][2])
-            self.qc.cx(qubit['qubits'][1],qubit['qubits'][2])
-            self.qc.cx(qubit['qubits'][0],qubit['qubits'][1])
+            theta = calculate_rotation_angle_theta(alpha, qubit["coefficient"])
+            self.qc.cx(qubit["qubits"][0], qubit["qubits"][1])
+            self.qc.cx(qubit["qubits"][1], qubit["qubits"][2])
+            self.qc.rz(theta, qubit["qubits"][2])
+            self.qc.cx(qubit["qubits"][1], qubit["qubits"][2])
+            self.qc.cx(qubit["qubits"][0], qubit["qubits"][1])
 
     def close_round(self, beta):
         """
@@ -124,8 +122,3 @@ class QAOAInstance3SAT(object):
 
     def build_hamiltonian(self):
         pass
-
-
-
-
-
