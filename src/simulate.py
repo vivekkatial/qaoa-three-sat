@@ -3,11 +3,12 @@
 Author: Vivek Katial
 """
 from instance import QAOAInstance3SAT
-from qc_helpers import calculate_rotation_angle_theta, load_raw_instance, clean_instance
+from qc_helpers import load_raw_instance, clean_instance
 from rotations import Rotations
 
 
 def main():
+    """ Simulate Function"""
 
     instance_file = "data/raw/sample_instance.json"
 
@@ -38,7 +39,7 @@ def main():
     print(instance.quantum_circuit)
     instance.simulate_circuit()
     print(instance.statevector)
-    X = single_rotations.build_hamiltonian()
+    state = single_rotations.build_hamiltonian()
 
 
 if __name__ == "__main__":

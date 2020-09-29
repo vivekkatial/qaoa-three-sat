@@ -1,8 +1,13 @@
-import json
-from qc_helpers import *
+"""
+Rotations Class for representing rotations on qubits
+
+Author: Vivek Katial
+"""
+
+# from qc_helpers import *
 
 
-class Rotations(object):
+class Rotations():
     """This object represents the rotations that can exist on a set of qubits
 
     Attributes:
@@ -37,10 +42,11 @@ class Rotations(object):
         """
 
         curr = 1
+        self.n_qubits += 1
         #        for term in range(n_qubits):
         #            if term in self.n_qubits
         #                curr = p_I()
 
-        H = "F"
+        h_now = "F"
 
-        return H
+        return h_now
