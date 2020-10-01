@@ -4,10 +4,11 @@ Rotations Class for representing rotations on qubits
 Author: Vivek Katial
 """
 
-# from qc_helpers import *
+import numpy as np
+from qc_helpers import pauli_z, pauli_identity
 
 
-class Rotations():
+class Rotations:
     """This object represents the rotations that can exist on a set of qubits
 
     Attributes:
@@ -26,6 +27,7 @@ class Rotations():
         self.rotations = rotations
         self.n_qubits = n_qubits
         self.interactions = self.get_interactions()
+        self.hamiltonian = None
 
     def get_interactions(self):
         """Gets the number of  interaction terms in the QC Circuit
@@ -41,12 +43,21 @@ class Rotations():
         A function for building Hamiltonians
         """
 
-        curr = 1
-        self.n_qubits += 1
-        #        for term in range(n_qubits):
-        #            if term in self.n_qubits
-        #                curr = p_I()
+        # Initialise empty hamiltonian
+        hamiltonian = np.zeros((2 ** self.n_qubits, 2 ** self.n_qubits))
 
-        h_now = "F"
+        for rotation in self.rotations:
+            # Initialise current Ham
+            curr = 1
+            # Loop through qubits
+            for term in range(self.n_qubits):
+                # If Z-rotation operating on qubit i apply Z operation
+                if term in rotation["qubits"]:
+                    curr = np.kron(curr, pauli_z())
+                # Else leave alone
+                else:
+                    curr = np.kron(curr, pauli_identity())
 
-        return h_now
+            hamiltonian += curr * rotation["coefficient"]
+
+        self.hamiltonian = hamiltonian

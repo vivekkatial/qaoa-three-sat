@@ -4,10 +4,16 @@ This code contains the main Instance Class for QAOA 3SAT
 Author: Vivek Katial
 """
 
+# Standard Modules
 from math import pi
 
+# External Modules
+import numpy as np
+from scipy.optimize import minimize
 from qiskit import Aer, IBMQ
 from qiskit import QuantumCircuit, execute
+
+# Custom Modules
 from rotations import Rotations
 from qc_helpers import calculate_rotation_angle_theta, load_raw_instance, clean_instance
 
@@ -37,8 +43,9 @@ class QAOAInstance3SAT:
         single_rotations,
         double_rotations,
         triple_rotations,
-        alpha=[pi / 2],
-        beta=[0],
+        alpha,
+        beta,
+        simplex_area_param,
         n_rounds=1,
         backend=Aer.get_backend("statevector_simulator"),
     ):
@@ -48,6 +55,10 @@ class QAOAInstance3SAT:
         self.double_rotations = double_rotations
         self.triple_rotations = triple_rotations
 
+        # Optimization settings
+        self.simplex_area_param = simplex_area_param
+        self.classical_iter = 0
+
         # Quantum SubRoutine Settings
         self.circuit_init = False
         self.alpha = alpha
@@ -55,11 +66,13 @@ class QAOAInstance3SAT:
         self.n_rounds = n_rounds
         self.backend = backend
         self.statevector = None
+        self.hamiltonian = None
 
         # Metric settings
 
         self.quantum_circuit = None
         self.energy = 0
+        self.iter = 0
 
     def initiate_circuit(self):
         """A function to initiate circuit as a qiskit QC circuit object.
@@ -94,27 +107,27 @@ class QAOAInstance3SAT:
             self.quantum_circuit.rz(theta, qubit["qubits"][1])
             self.quantum_circuit.cx(qubit["qubits"][0], qubit["qubits"][1])
 
-    def add_triple_rotations(self, alpha):
+    def add_triple_rotations(self):
         """Adding three qubit rotation terms into circuit"""
 
         # Apply 3 qubit rotations
         for qubit in self.triple_rotations.rotations:
-            theta = calculate_rotation_angle_theta(alpha, qubit["coefficient"])
+            theta = calculate_rotation_angle_theta(self.alpha[0], qubit["coefficient"])
             self.quantum_circuit.cx(qubit["qubits"][0], qubit["qubits"][1])
             self.quantum_circuit.cx(qubit["qubits"][1], qubit["qubits"][2])
             self.quantum_circuit.rz(theta, qubit["qubits"][2])
             self.quantum_circuit.cx(qubit["qubits"][1], qubit["qubits"][2])
             self.quantum_circuit.cx(qubit["qubits"][0], qubit["qubits"][1])
 
-    def close_round(self, beta):
+    def close_round(self):
         """
         Closing the round of a quantum circuit (then measuring)
         """
         self.quantum_circuit.barrier()
         # Apply X rotations
-        self.quantum_circuit.rx(beta, range(self.n_qubits))
+        self.quantum_circuit.rx(self.beta[0], range(self.n_qubits))
         self.quantum_circuit.barrier()
-        self.quantum_circuit.measure(range(self.n_qubits), range(self.n_qubits))
+        # self.quantum_circuit.measure(range(self.n_qubits), range(self.n_qubits))
 
     def simulate_circuit(self):
         """
@@ -124,14 +137,90 @@ class QAOAInstance3SAT:
             execute(self.quantum_circuit, self.backend).result().get_statevector()
         )
 
-    def optimise_circuit(self):
+    def build_hamiltonian(self):
         """
-        Method to optimise the circuit
+        Calculate circuit energy
         """
-        pass
+        self.single_rotations.build_hamiltonian()
+        self.double_rotations.build_hamiltonian()
+        self.triple_rotations.build_hamiltonian()
+        # Build circuit Hamiltonian
+        self.hamiltonian = (
+            self.single_rotations.hamiltonian
+            + self.double_rotations.hamiltonian
+            + self.triple_rotations.hamiltonian
+        )
+
+    def cost_function(self, angles):
+        """Circuit Cost function, run the circuit and measure the energy
+
+        :param angles: Angle theta found by classical optimiser
+        ...
+        :return: self.energy
+        :rtype: float
+        """
+
+        # Update angles
+        print(
+            "Classical Optimization Iteration %s: \t alpha=%s \t beta=%s \t energy=%s"
+            % (self.classical_iter, angles[0], angles[1], self.energy)
+        )
+
+        self.alpha = [angles[0]]
+        self.beta = [angles[1]]
+
+        # Rebuild Circuit
+        self.quantum_circuit = None
+        self.initiate_circuit()
+        self.add_single_rotations()
+        self.add_double_rotations()
+        self.add_triple_rotations()
+        self.close_round()
+
+        self.classical_iter += 1
+        # Run circuit
+        self.simulate_circuit()
+        self.measure_energy()
+
+        return self.energy
 
     def measure_energy(self):
         """
         Calculate circuit energy
         """
-        pass
+        self.build_hamiltonian()
+        ham_state = np.matmul(self.hamiltonian, self.statevector)
+        energy = np.dot(ham_state, np.conjugate(self.statevector))
+        self.energy = energy.real
+
+    def optimise_circuit(self):
+        """
+        Method to optimise the circuit
+        """
+
+        # Construct n-d array for Nelder-Mead
+        angles = [self.alpha, self.beta]
+        angles = [angle for i in angles for angle in i]
+
+        # Build a simplex (add epsilon to alpha / add epsilon to beta)
+        angles_0 = angles
+        angles_1 = [i - self.simplex_area_param for i in angles]
+        angles_2 = [i + self.simplex_area_param for i in angles]
+
+        angles_simplex = np.array([angles_0, angles_1, angles_2], dtype=object)
+        print("Simplex Grid: %s" % (angles_simplex))
+
+        # Optimise alpha and beta using the cost function <s|H|s>
+        res = minimize(
+            self.cost_function,
+            x0=angles,
+            method="nelder-mead",
+            options={
+                "xtol": 1e-8,
+                "disp": True,
+                "initial_simplex": angles_simplex,
+                "adaptive": True,
+            },
+        )
+
+        print(res.x[0], res.x[1])
