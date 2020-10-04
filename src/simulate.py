@@ -29,6 +29,14 @@ def main():
     double_rotations = Rotations(double_rotations, n_qubits)
     triple_rotations = Rotations(triple_rotations, n_qubits)
 
+    # Classical Optimisation Parameters
+    optimisation_opts = {
+        "xtol": 0.001,
+        "disp": True,
+        "adaptive": True,
+        "simplex_area_param": 0.1,
+    }
+
     # Initatiate Instance Class for problem
     instance = QAOAInstance3SAT(
         n_qubits=n_qubits,
@@ -37,7 +45,8 @@ def main():
         triple_rotations=triple_rotations,
         alpha=[-1.5],
         beta=[-0.6],
-        simplex_area_param=0.01,
+        classical_opt_alg="nelder-mead",
+        optimiser_opts=optimisation_opts,
     )
 
     # Build Quantum Circuit
