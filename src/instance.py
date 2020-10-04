@@ -9,13 +9,13 @@ from math import pi
 
 # External Modules
 import numpy as np
-from scipy.optimize import minimize
 from qiskit import Aer, IBMQ
 from qiskit import QuantumCircuit, execute
 
 # Custom Modules
 from rotations import Rotations
 from qc_helpers import calculate_rotation_angle_theta, load_raw_instance, clean_instance
+from optimiser.nelder_mead import NelderMead
 
 
 class QAOAInstance3SAT:
@@ -27,13 +27,23 @@ class QAOAInstance3SAT:
         single_rotations (list:dict): A list of dictionaries containing single qubit rotations
         double_rotations (list:dict): A list of dictionaries containing double qubit rotations
         triple_rotations (list:dict): A list of dictionaries containing triple qubit rotations
+        classical_opt_alg (str): The classical optimisation algorithm being utilised to optimise angles
+        optimiser_opts (dict): A dictionary with optimisation algorithm parameters
+        optimiser (obj): Optimiser Object
+        classical_iter (int): Number of iterations done on the classical optimisation algorithm
+        circuit_init (bool): Boolean on whether or not circuit initiated
         alpha (list:float): A list of angle values \alpha
         beta (list:float): A list of angle values for \beta
         n_rounds (int): The number of rounds experiment runs for
         backend (object): An object representing where the simulation will run
+        statevector (list:complex): An array of complex numbers representing the 2^n state vector
+        hamiltonian (obj): A `numpy` array containing the problem Hamiltonian
+        quantum_circuit (obj): A `qiskit` quantum circuit object
+        energy (float): The energy cost
 
     Todo:
         - Add functionality for multiple rounds (need to parmaterise more alpha/beta)
+        - Add test that opt-algo matches opt-algo-options
 
     """
 
@@ -45,7 +55,8 @@ class QAOAInstance3SAT:
         triple_rotations,
         alpha,
         beta,
-        simplex_area_param,
+        classical_opt_alg,
+        optimiser_opts,
         n_rounds=1,
         backend=Aer.get_backend("statevector_simulator"),
     ):
@@ -56,7 +67,9 @@ class QAOAInstance3SAT:
         self.triple_rotations = triple_rotations
 
         # Optimization settings
-        self.simplex_area_param = simplex_area_param
+        self.classical_opt_alg = classical_opt_alg
+        self.optimiser_opts = optimiser_opts
+        self.optimiser = None
         self.classical_iter = 0
 
         # Quantum SubRoutine Settings
@@ -72,7 +85,6 @@ class QAOAInstance3SAT:
 
         self.quantum_circuit = None
         self.energy = 0
-        self.iter = 0
 
     def initiate_circuit(self):
         """A function to initiate circuit as a qiskit QC circuit object.
@@ -202,25 +214,20 @@ class QAOAInstance3SAT:
         angles = [self.alpha, self.beta]
         angles = [angle for i in angles for angle in i]
 
-        # Build a simplex (add epsilon to alpha / add epsilon to beta)
-        angles_0 = angles
-        angles_1 = [i - self.simplex_area_param for i in angles]
-        angles_2 = [i + self.simplex_area_param for i in angles]
+        # Build Optimiser Class
+        if self.classical_opt_alg == "nelder-mead":
+            # Initialise Nelder Mead
+            self.optimiser = NelderMead(
+                vars_vec=angles,
+                cost_function=self.cost_function,
+                options=self.optimiser_opts,
+            )
+        else:
+            # Raise Error if a valid algorithm not specified
+            RaiseError("Please Specify an Algorithm")
 
-        angles_simplex = np.array([angles_0, angles_1, angles_2], dtype=object)
-        print("Simplex Grid: %s" % (angles_simplex))
+        # Optimise valid
+        self.optimiser.optimise()
 
-        # Optimise alpha and beta using the cost function <s|H|s>
-        res = minimize(
-            self.cost_function,
-            x0=angles,
-            method="nelder-mead",
-            options={
-                "xtol": 1e-8,
-                "disp": True,
-                "initial_simplex": angles_simplex,
-                "adaptive": True,
-            },
-        )
-
-        print(res.x[0], res.x[1])
+        # Return Optimised Variable Vector
+        print(self.optimiser.vars_vec)

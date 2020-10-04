@@ -18,6 +18,14 @@ def main():
     # Sample Instance
     instance_file = "data/raw/sample_instance-usa.json"
 
+    # Instance File
+    optimisation_opts = {
+        "xtol": 0.001,
+        "disp": True,
+        "adaptive": True,
+        "simplex_area_param": 0.1,
+    }
+
     # Load instance into environment
     raw_instance = load_raw_instance(instance_file)
 
@@ -48,6 +56,9 @@ def main():
                 triple_rotations=triple_rotations,
                 alpha=[alp],
                 beta=[bet],
+                n_rounds = 1,
+                classical_opt_alg="nelder-mead",
+                optimiser_opts=optimisation_opts
             )
 
             # Build Quantum Circuit
@@ -75,21 +86,6 @@ def main():
 
     df = pd.DataFrame(energy_ls)
     df.to_csv("data/sim_sample_usa.csv")
-    # Initial Iteration
-    # instance.optimise_circuit()
-
-    # Eigenvalue
-    # print(instance.hamiltonian)
-    # print(np.linalg.eig(instance.hamiltonian))
-    # print("Minimum Energy is: %s"%())
-
-    # tol = 0.001 # Set tolerance
-    # # Run optimisation untill circuit converges
-    # while abs(energy_0 - instance.energy) > tol:
-    #     print("Running circuit again")
-    #     energy_0 = instance.energy
-    #     instance.optimise_circuit()
-
 
 if __name__ == "__main__":
     main()
