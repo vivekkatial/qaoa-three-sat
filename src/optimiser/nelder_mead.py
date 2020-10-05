@@ -38,11 +38,12 @@ class NelderMead:
 
         # Build a simplex (add epsilon to alpha / add epsilon to beta)
         vars_vec_0 = self.vars_vec
-        vars_vec_1 = [i - self.options["simplex_area_param"] for i in vars_vec_0]
-        vars_vec_2 = [i - self.options["simplex_area_param"] for i in vars_vec_0]
+        print(self.vars_vec)
+        # vars_vec_1 = [i + self.options["simplex_area_param"] for i in vars_vec_0]
+        # vars_vec_2 = [i - self.options["simplex_area_param"] for i in vars_vec_0]
 
         # Build the simplex triangle for the algorithm
-        simplex = np.array([vars_vec_0, vars_vec_1, vars_vec_2], dtype=object)
+        # simplex = np.array([vars_vec_0, vars_vec_1, vars_vec_2], dtype=object)
 
         # Optimise alpha and beta using the cost function <s|H|s>
         res = minimize(
@@ -52,7 +53,7 @@ class NelderMead:
             options={
                 "xtol": self.options["xtol"],
                 "disp": self.options["disp"],
-                "initial_simplex": simplex,
+                # "initial_simplex": simplex,
                 "adaptive": self.options["adaptive"],
             },
         )

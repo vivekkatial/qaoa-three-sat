@@ -40,11 +40,6 @@ class QAOAInstance3SAT:
         hamiltonian (obj): A `numpy` array containing the problem Hamiltonian
         quantum_circuit (obj): A `qiskit` quantum circuit object
         energy (float): The energy cost
-
-    Todo:
-        - Add functionality for multiple rounds (need to parmaterise more alpha/beta)
-        - Add test that opt-algo matches opt-algo-options
-
     """
 
     def __init__(
@@ -280,11 +275,11 @@ class QAOAInstance3SAT:
         # Update angles
         print(
             "Classical Optimization Iteration %s: \t alpha=%s \t beta=%s \t energy=%s"
-            % (self.classical_iter, angles[0], angles[1], self.energy)
+            % (self.classical_iter, angles[0:self.n_rounds], angles[self.n_rounds:], self.energy)
         )
 
-        self.alpha = [angles[0]]
-        self.beta = [angles[1]]
+        self.alpha = angles[0:self.n_rounds].tolist()
+        self.beta = angles[self.n_rounds:].tolist()
 
         # Rebuild Circuit
         self.quantum_circuit = None
