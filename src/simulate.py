@@ -31,10 +31,11 @@ def main():
 
     # Classical Optimisation Parameters
     optimisation_opts = {
+        "classical_opt_alg": "nelder-mead",
         "xtol": 0.001,
         "disp": True,
         "adaptive": True,
-        "simplex_area_param": 0.1,
+        "simplex_area_param": 0.1
     }
 
     # Initatiate Instance Class for problem
@@ -43,31 +44,28 @@ def main():
         single_rotations=single_rotations,
         double_rotations=double_rotations,
         triple_rotations=triple_rotations,
-        alpha=[-1.5],
-        beta=[-0.6],
+        alpha=[0, 0],
+        beta=[0, 0],
+        n_rounds=2,
         classical_opt_alg="nelder-mead",
         optimiser_opts=optimisation_opts,
     )
 
-    # Build Quantum Circuit
-    instance.initiate_circuit()
-    instance.add_single_rotations()
-    instance.add_double_rotations()
-    instance.add_triple_rotations()
-    instance.close_round()
+    
+    #instance.build_circuit()
 
     # Print the circuit being experimented on
-    print(instance.quantum_circuit)
-    # Kick-off run
-    print(
-        "Circuit Iteration %s: \t alpha=%s \t beta=%s \t energy=%s"
-        % (instance.iter, instance.alpha[0], instance.beta[0], instance.energy)
-    )
+    # print(instance.quantum_circuit)
+    # # Kick-off run
+    # print(
+    #     "Circuit Iteration %s: \t alpha=%s \t beta=%s \t energy=%s"
+    #     % (instance.classical_iter, instance.alpha[0], instance.beta[0], instance.energy)
+    # )
 
-    # Run Optimisation
-    energy_0 = instance.energy
-    # Initial Iteration
-    instance.optimise_circuit()
+    # # Run Optimisation
+    # energy_0 = instance.energy
+    # # Initial Iteration
+    # instance.optimise_circuit()
 
 
 if __name__ == "__main__":
