@@ -192,43 +192,43 @@ class QAOAInstance3SAT:
         self.quantum_circuit.barrier()
         return self.quantum_circuit
 
-    def add_single_rotations(self):
+    def add_single_rotations(self, n_round):
         """ Adding single qubit rotations to circuit"""
         # Apply single qubit rotations
         for qubit in self.single_rotations.rotations:
-            theta = calculate_rotation_angle_theta(self.alpha[0], qubit["coefficient"])
+            theta = calculate_rotation_angle_theta(self.alpha[n_round], qubit["coefficient"])
             self.quantum_circuit.rz(theta, qubit["qubits"][0])
 
-    def add_double_rotations(self):
+    def add_double_rotations(self, n_round):
         """ Adding two qubit rotations to circuit"""
 
         # Apply double qubit rotations
         for qubit in self.double_rotations.rotations:
-            theta = calculate_rotation_angle_theta(self.alpha[0], qubit["coefficient"])
+            theta = calculate_rotation_angle_theta(self.alpha[n_round], qubit["coefficient"])
             # Apply on Gate Z_i Z_j
             self.quantum_circuit.cx(qubit["qubits"][0], qubit["qubits"][1])
             self.quantum_circuit.rz(theta, qubit["qubits"][1])
             self.quantum_circuit.cx(qubit["qubits"][0], qubit["qubits"][1])
 
-    def add_triple_rotations(self):
+    def add_triple_rotations(self, n_round):
         """Adding three qubit rotation terms into circuit"""
 
         # Apply 3 qubit rotations
         for qubit in self.triple_rotations.rotations:
-            theta = calculate_rotation_angle_theta(self.alpha[0], qubit["coefficient"])
+            theta = calculate_rotation_angle_theta(self.alpha[n_round], qubit["coefficient"])
             self.quantum_circuit.cx(qubit["qubits"][0], qubit["qubits"][1])
             self.quantum_circuit.cx(qubit["qubits"][1], qubit["qubits"][2])
             self.quantum_circuit.rz(theta, qubit["qubits"][2])
             self.quantum_circuit.cx(qubit["qubits"][1], qubit["qubits"][2])
             self.quantum_circuit.cx(qubit["qubits"][0], qubit["qubits"][1])
 
-    def close_round(self):
+    def close_round(self, n_round):
         """
         Closing the round of a quantum circuit (then measuring)
         """
         self.quantum_circuit.barrier()
         # Apply X rotations
-        self.quantum_circuit.rx(self.beta[0], range(self.n_qubits))
+        self.quantum_circuit.rx(self.beta[n_round], range(self.n_qubits))
         self.quantum_circuit.barrier()
         # self.quantum_circuit.measure(range(self.n_qubits), range(self.n_qubits))
 
@@ -241,10 +241,10 @@ class QAOAInstance3SAT:
         self.initiate_circuit()
 
         for i in range(self.n_rounds):
-            self.add_single_rotations()
-            self.add_double_rotations()
-            self.add_triple_rotations()
-            self.close_round()
+            self.add_single_rotations(n_round=i)
+            self.add_double_rotations(n_round=i)
+            self.add_triple_rotations(n_round=i)
+            self.close_round(i)
 
     def simulate_circuit(self):
         """

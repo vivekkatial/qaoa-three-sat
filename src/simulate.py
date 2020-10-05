@@ -44,28 +44,28 @@ def main():
         single_rotations=single_rotations,
         double_rotations=double_rotations,
         triple_rotations=triple_rotations,
-        alpha=[0, 0],
-        beta=[0, 0],
+        alpha=[0,1],
+        beta=[0,1],
         n_rounds=2,
         classical_opt_alg="nelder-mead",
         optimiser_opts=optimisation_opts,
     )
 
     
-    #instance.build_circuit()
+    instance.build_circuit()
 
     # Print the circuit being experimented on
-    # print(instance.quantum_circuit)
+    print(instance.quantum_circuit)
     # # Kick-off run
-    # print(
-    #     "Circuit Iteration %s: \t alpha=%s \t beta=%s \t energy=%s"
-    #     % (instance.classical_iter, instance.alpha[0], instance.beta[0], instance.energy)
-    # )
+    print(
+        "Circuit Iteration %s: \t alpha=%s \t beta=%s \t energy=%s"
+        % (instance.classical_iter, instance.alpha, instance.beta, instance.energy)
+    )
 
     # # Run Optimisation
-    # energy_0 = instance.energy
+    energy_0 = instance.energy
     # # Initial Iteration
-    # instance.optimise_circuit()
+    instance.optimise_circuit()
 
 
 if __name__ == "__main__":
