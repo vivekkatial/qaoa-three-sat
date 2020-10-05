@@ -4,9 +4,11 @@ Author: Vivek Katial
 """
 
 from math import pi
-from instance import QAOAInstance3SAT
-from qc_helpers import load_raw_instance, clean_instance
-from rotations import Rotations
+
+# Import Custom Modules
+from qaoa_three_sat.instance.three_sat import QAOAInstance3SAT
+from qaoa_three_sat.utils.qc_helpers import load_raw_instance, clean_instance
+from qaoa_three_sat.rotation.rotations import Rotations
 
 
 def main():

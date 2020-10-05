@@ -5,7 +5,7 @@ Author: Vivek Katial
 """
 
 import numpy as np
-from qc_helpers import pauli_z, pauli_identity
+from qaoa_three_sat.utils.qc_helpers import pauli_z, pauli_identity
 
 
 class Rotations:

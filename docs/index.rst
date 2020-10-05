@@ -12,6 +12,7 @@ of which has its own self-contained documentation. This project runs on IBM `qis
 
    installation
    nelder-mead
+   modules
 
 Indices and tables
 ==================

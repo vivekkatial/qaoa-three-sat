@@ -10,9 +10,9 @@ from qiskit import Aer, IBMQ
 from qiskit import QuantumCircuit, execute
 
 # Custom Modules
-from rotations import Rotations
-from qc_helpers import calculate_rotation_angle_theta
-from optimiser.nelder_mead import NelderMead
+from qaoa_three_sat.rotation.rotations import Rotations
+from qaoa_three_sat.utils.qc_helpers import calculate_rotation_angle_theta
+from qaoa_three_sat.optimiser.nelder_mead import NelderMead
 
 
 class QAOAInstance3SAT:
