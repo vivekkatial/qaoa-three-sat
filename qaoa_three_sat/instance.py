@@ -19,24 +19,42 @@ class QAOAInstance3SAT:
     """This class is a generic class for an instance of QAOA 3SAT and
     it consists of all the base methods needed for our circuit evolution
 
-    Attributes:
-        n_qubits (int): The number of qubits
-        n_rounds (int): The number of rounds the QAOA circuit is built for
-        single_rotations (list:dict): A list of dictionaries containing single qubit rotations
-        double_rotations (list:dict): A list of dictionaries containing double qubit rotations
-        triple_rotations (list:dict): A list of dictionaries containing triple qubit rotations
-        classical_opt_alg (str): The classical optimisation algorithm being utilised to calc angles
-        optimiser_opts (dict): A dictionary with optimisation algorithm parameters
-        optimiser (obj): Optimiser Object
-        classical_iter (int): Number of iterations done on the classical optimisation algorithm
-        circuit_init (bool): Boolean on whether or not circuit initiated
-        alpha (list:float): A list of angle values \alpha
-        beta (list:float): A list of angle values for \beta
-        backend (object): An object representing where the simulation will run
-        statevector (list:complex): An array of complex numbers representing the 2^n state vector
-        hamiltonian (obj): A `numpy` array containing the problem Hamiltonian
-        quantum_circuit (obj): A `qiskit` quantum circuit object
-        energy (float): The energy cost
+    Attributes
+    ----------
+        n_qubits : int
+            The number of qubits
+        n_rounds : int
+            The number of rounds the QAOA circuit is built for
+        single_rotations : list
+            `Rotations` Object for Single Qubit Rotations
+        double_rotations : list
+            `Rotations` Object for Double Qubit Rotations
+        triple_rotations : list
+            `Rotations` Object for Triple Qubit Rotations
+        classical_opt_alg : str
+            The classical optimisation algorithm being utilised to calc angles
+        optimiser_opts : dict
+            A dictionary with optimisation algorithm parameters
+        optimiser : object
+            Optimiser Object
+        classical_iter : int
+            Number of iterations done on the classical optimisation algorithm
+        circuit_init : bool
+            Boolean on whether or not circuit initiated
+        alpha : list
+            A list of angle values alpha
+        beta : list
+            A list of angle values for beta
+        backend : object
+            An object representing where the simulation will run (e.g. `Aer.get_backend('statevector_simulator'))
+        statevector : list
+            An array of complex numbers representing the 2^n state vector
+        hamiltonian : np.array()
+            A `numpy` array containing the problem Hamiltonian
+        quantum_circuit : object
+            A `qiskit` quantum circuit object
+        energy : float
+            The energy cost function value being minimised
     """
 
     def __init__(

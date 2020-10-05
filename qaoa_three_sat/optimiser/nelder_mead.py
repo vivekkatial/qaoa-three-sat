@@ -9,40 +9,35 @@ from scipy.optimize import minimize
 
 
 class NelderMead:
-    """An optimisation object class
+    """This class is an Object for the Nelder-Mead Optimisation algorithm
 
-    Attributes:
-        vars (:float:`list`): A list of variables that need to be optimised (e.g. \alpha_i and \beta_i)
-        cost_function (:callback:`func`): A cost function with `callback()` that we're evaluating
-        options (:obj:`dict`): Optimisation Algorithm Parameters Dictionary
+    Attributes
+    ----------
+        vars : list
+            A list of variables that need to be optimised (e.g. alpha_i and beta_i)
+        cost_function : func
+            A cost function with `callback()` that we're evaluating
+        options : dict
+            Optimisation Algorithm Parameters Dictionary.
 
+    Example
+    --------
+    >>> from qaoa_three_sat.optimiser.nelder_mead import NelderMead
+    >>> NelderMead(vars_vec = [0,0], cost_function=rosen, options=opts_dict)
     """
 
     def __init__(self, vars_vec, cost_function, options):
         """
         Initialisation method on the class for rotations
-
-        Args:
-            vars (:float:`list`): A list of variables that need to be optimised (e.g. \alpha_i and \beta_i)
-            cost_function (:callback:`func`) A cost function with `callback()` that we're evaluating
-
         """
         self.vars_vec = vars_vec
         self.cost_function = cost_function
         self.options = options
 
     def optimise(self):
-        """
-        Method to optimise the circuit
-        """
-
+        """Optimisation Method for Nelder-Mead"""
         # Build a simplex (add epsilon to alpha / add epsilon to beta)
         vars_vec_0 = self.vars_vec
-        # vars_vec_1 = [i + self.options["simplex_area_param"] for i in vars_vec_0]
-        # vars_vec_2 = [i - self.options["simplex_area_param"] for i in vars_vec_0]
-
-        # Build the simplex triangle for the algorithm
-        # simplex = np.array([vars_vec_0, vars_vec_1, vars_vec_2], dtype=object)
 
         # Optimise alpha and beta using the cost function <s|H|s>
         res = minimize(
