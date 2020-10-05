@@ -38,7 +38,6 @@ class NelderMead:
 
         # Build a simplex (add epsilon to alpha / add epsilon to beta)
         vars_vec_0 = self.vars_vec
-        print(self.vars_vec)
         # vars_vec_1 = [i + self.options["simplex_area_param"] for i in vars_vec_0]
         # vars_vec_2 = [i - self.options["simplex_area_param"] for i in vars_vec_0]
 
@@ -59,6 +58,11 @@ class NelderMead:
         )
 
         # Print result
-        print("Optimal Sol:\t alpha:%s beta:%s" % (res.x[0], res.x[1]))
-
+        print(
+            "Optimal Sol:\t alpha:%s beta:%s"
+            % (
+                res.x[0 : (int(len(self.vars_vec) / 2))],
+                res.x[int(len(self.vars_vec) / 2) :],
+            )
+        )
         self.vars_vec = res.x

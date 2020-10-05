@@ -56,9 +56,9 @@ def main():
                 triple_rotations=triple_rotations,
                 alpha=[alp],
                 beta=[bet],
-                n_rounds = 1,
+                n_rounds=1,
                 classical_opt_alg="nelder-mead",
-                optimiser_opts=optimisation_opts
+                optimiser_opts=optimisation_opts,
             )
 
             # Build Quantum Circuit
@@ -86,6 +86,7 @@ def main():
 
     df = pd.DataFrame(energy_ls)
     df.to_csv("data/sim_sample_usa.csv")
+
 
 if __name__ == "__main__":
     main()

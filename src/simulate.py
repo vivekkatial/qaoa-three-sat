@@ -7,8 +7,6 @@ from math import pi
 from instance import QAOAInstance3SAT
 from qc_helpers import load_raw_instance, clean_instance
 from rotations import Rotations
-from scipy.optimize import minimize
-import numpy as np
 
 
 def main():
@@ -35,7 +33,7 @@ def main():
         "xtol": 0.001,
         "disp": True,
         "adaptive": True,
-        "simplex_area_param": 0.1
+        "simplex_area_param": 0.1,
     }
 
     # Initatiate Instance Class for problem
@@ -44,27 +42,24 @@ def main():
         single_rotations=single_rotations,
         double_rotations=double_rotations,
         triple_rotations=triple_rotations,
-        alpha=[0,1],
-        beta=[0,1],
+        alpha=[-pi / 2, -pi / 2],
+        beta=[pi / 2, pi / 2],
         n_rounds=2,
         classical_opt_alg="nelder-mead",
         optimiser_opts=optimisation_opts,
     )
 
-    
     instance.build_circuit()
 
     # Print the circuit being experimented on
     print(instance.quantum_circuit)
-    # # Kick-off run
+    # Kick-off run
     print(
         "Circuit Iteration %s: \t alpha=%s \t beta=%s \t energy=%s"
         % (instance.classical_iter, instance.alpha, instance.beta, instance.energy)
     )
 
-    # # Run Optimisation
-    energy_0 = instance.energy
-    # # Initial Iteration
+    # Optimise
     instance.optimise_circuit()
 
 
