@@ -4,12 +4,15 @@ Author: Vivek Katial
 """
 
 from math import pi
-from instance import QAOAInstance3SAT
-from qc_helpers import load_raw_instance, clean_instance
-from rotations import Rotations
+
 from scipy.optimize import minimize
 import numpy as np
 import pandas as pd
+
+# Import Custom Modules
+from qaoa_three_sat.instance.three_sat import QAOAInstance3SAT
+from qaoa_three_sat.utils.qc_helpers import load_raw_instance, clean_instance
+from qaoa_three_sat.rotation.rotations import Rotations
 
 
 def main():
@@ -24,6 +27,7 @@ def main():
         "disp": True,
         "adaptive": True,
         "simplex_area_param": 0.1,
+        "classical_opt_alg": "nelder-mead",
     }
 
     # Load instance into environment
@@ -62,11 +66,7 @@ def main():
             )
 
             # Build Quantum Circuit
-            instance.initiate_circuit()
-            instance.add_single_rotations()
-            instance.add_double_rotations()
-            instance.add_triple_rotations()
-            instance.close_round()
+            instance.build_circuit()
             iteration += 1
 
             # Print the circuit being experimented on
