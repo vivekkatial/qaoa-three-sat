@@ -100,11 +100,14 @@ def pauli_t():
 def load_raw_instance(filename):
     """Function to load JSON instance file as a python `dict()`
 
-    :param filename: File name of the `.json` containing instance data
-    :type filename: dict
-    ...
-    :return: A python `dict()` containing instance data
-    :rtype: dict
+    Parameters
+    ----------
+    filename : str
+        instance filename
+
+    Returns
+    -------
+    instance : dict
     """
     with open(filename) as instance_file:
         instance = json.load(instance_file)
@@ -124,13 +127,17 @@ def clean_instance(raw_instance):
 def calculate_rotation_angle_theta(alpha, r_coeff):
     """A function to calculate the rotation angle theta for the circuit
 
-    :param alpha: Angle theta found by classical optimiser
-    :type alpha: float
-    :param r_coeff: Coefficient for pauli terms
-    :type r_coeff: float
-    ...
-    :return: Angle theta for rotation to apply
-    :rtype: float
+    Parameters
+    ----------
+    alpha : float
+        Angle theta found by classical optimiser
+    r_coeff : float
+        Coefficient for pauli terms
+
+    Returns
+    -------
+    angle : float
+        Angle theta for rotation to apply
     """
     theta = -2 * alpha * r_coeff
     return theta

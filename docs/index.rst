@@ -1,20 +1,18 @@
-.. qaoa-three-sat documentation master file, created by
-   sphinx-quickstart.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+Welcome to QAOA Three SAT Documention
+______________________________________
 
-qaoa-three-sat documentation!
-==============================================
 
-Contents:
+
+QAOA-3SAT is organized into modules for the various optimisation algorithms, each
+of which has its own self-contained documentation. This project runs on IBM `qiskit`.
 
 .. toctree::
-   :maxdepth: 2
+   :name: mastertoc
+   :maxdepth: 1
 
-   getting-started
-   commands
-
-
+   installation
+   nelder-mead
+   modules
 
 Indices and tables
 ==================
