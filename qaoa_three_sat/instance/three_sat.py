@@ -55,6 +55,16 @@ class QAOAInstance3SAT:
             A `qiskit` quantum circuit object
         energy : float
             The energy cost function value being minimised
+        pdf : list
+            An array representing a probability distribution across all possible states
+        track_optimiser : bool
+            A boolean on whether or not tracking of the classical optimizer should be enabled
+        d_alpha : list
+            An array containing the alpha angle settings at each iteration e.g. ``[[a_0, a_1], ... ]``
+        d_beta : list
+            An array containing the beta angle settings at each iteration e.g. ``[[b_0, b_1], ... ]``
+        d_energy : list
+            An array containing the energy angle settings at each iteration e.g. ``[e_1, ..., e_n]``    
     """
 
     def __init__(
@@ -68,6 +78,7 @@ class QAOAInstance3SAT:
         beta,
         classical_opt_alg,
         optimiser_opts,
+        track_optimiser = False,
         backend=Aer.get_backend("statevector_simulator"),
     ):
 
@@ -81,6 +92,12 @@ class QAOAInstance3SAT:
         self.optimiser_opts = optimiser_opts
         self.optimiser = None
         self.classical_iter = 0
+        self.track_optimiser = track_optimiser
+
+        # Tracking attributes
+        self.d_alpha = []
+        self.d_beta = []
+        self.d_energy = []
 
         # Quantum SubRoutine Settings
         self.n_rounds = n_rounds
@@ -89,10 +106,10 @@ class QAOAInstance3SAT:
         self.beta = beta
         self.backend = backend
         self.statevector = None
+        self.pdf = None
         self.hamiltonian = None
 
         # Metric settings
-
         self.quantum_circuit = None
         self.energy = 0
 
@@ -203,6 +220,17 @@ class QAOAInstance3SAT:
                 % self.classical_opt_alg
             )
         self._optimiser_opts = value
+
+    @property
+    def track_optimiser(self):
+        """Get Tracking Optimiser Bool"""
+        return self._track_optimiser
+
+    @track_optimiser.setter
+    def track_optimiser(self, value):
+        if not isinstance(value, bool):
+            raise TypeError("track_optimiser must be a bool")
+        self._track_optimiser = value
 
     def initiate_circuit(self):
         """A function to initiate circuit as a qiskit QC circuit object.
@@ -330,6 +358,12 @@ class QAOAInstance3SAT:
         self.simulate_circuit()
         self.measure_energy()
 
+        # If tracking enabled - collect data on alpha, beta
+        if self.track_optimiser:
+            self.d_alpha.append(self.alpha)
+            self.d_beta.append(self.beta)
+            self.d_energy.append(self.energy)
+
         return self.energy
 
     def measure_energy(self):
@@ -368,3 +402,9 @@ class QAOAInstance3SAT:
 
         # Optimise Instance & Circuit
         self.optimiser.optimise()
+
+    def calculate_pdf(self):
+        """
+        This function generates a PDF from the instance state vector
+        """
+        self.pdf = np.multiply(self.statevector, np.conjugate(self.statevector))
