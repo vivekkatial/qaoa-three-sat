@@ -10,6 +10,7 @@ Subpackages
    qaoa_three_sat.instance
    qaoa_three_sat.optimiser
    qaoa_three_sat.simulation
+   qaoa_three_sat.visualisations
 
 Module contents
 ---------------
