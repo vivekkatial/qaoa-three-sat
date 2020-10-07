@@ -11,13 +11,40 @@ from qaoa_three_sat.utils.qc_helpers import load_raw_instance, clean_instance
 from qaoa_three_sat.rotation.rotations import Rotations
 
 
-def main():
-    """ Simulate Function"""
+def simulate_circuit(
+    instance_filename,
+    classical_opt_alg,
+    optimisation_opts,
+    alpha_trial,
+    beta_trial,
+    n_rounds,
+    track_optimiser,
+    disp=False,
+):
+    """This function simulates an instance of 3SAT on QAOA
 
-    # Sample Instance
-    instance_file = "data/raw/sample_instance.json"
+    :param instance_filename: Instance filename
+    :type instance_filename: str
+    :param classical_opt_alg: Name of Classical Optmisation Algorithm
+    :type classical_opt_alg: str
+    :param optimisation_opts: Optimisation Algorithm Parameters
+    :type optimisation_opts: dict
+    :param alpha_trial: Initial Guess for alpha
+    :type alpha_trial: list
+    :param beta_trial: Initial Guess for beta
+    :type beta_trial: list
+    :param n_rounds: Number of rounds to build QAOA Circuit
+    :type n_rounds: int
+    :param track_optimiser: Set True, to track classical optimisation metrics on Instance object
+    :type track_optimiser: bool
+    :param disp: Set True, to display classical optimisation steps for algorithm and print circuit, defaults to False
+    :type disp: bool, optional
+    :returns: Instance Object
+    :rtype: {qaoa_three_sat.QAOAInstance3SAT}
+    """
 
     # Load instance into environment
+    instance_file = "data/raw/%s.json" % instance_filename
     raw_instance = load_raw_instance(instance_file)
 
     # Construct rotation objects
@@ -29,6 +56,42 @@ def main():
     double_rotations = Rotations(double_rotations, n_qubits)
     triple_rotations = Rotations(triple_rotations, n_qubits)
 
+    # Initatiate Instance Class for problem
+    instance = QAOAInstance3SAT(
+        n_qubits=n_qubits,
+        single_rotations=single_rotations,
+        double_rotations=double_rotations,
+        triple_rotations=triple_rotations,
+        alpha=alpha_trial,
+        beta=beta_trial,
+        n_rounds=n_rounds,
+        classical_opt_alg=classical_opt_alg,
+        optimiser_opts=optimisation_opts,
+        track_optimiser=track_optimiser,
+        disp=disp,
+    )
+
+    instance.build_circuit()
+
+    # Print the circuit being experimented on
+    if disp:
+        print(instance.quantum_circuit)
+    # Kick-off run
+    if disp:
+        print(
+            "Circuit Iteration %s: \t alpha=%s \t beta=%s \t energy=%s"
+            % (instance.classical_iter, instance.alpha, instance.beta, instance.energy)
+        )
+
+    # Optimise
+    instance.optimise_circuit()
+
+    return instance
+
+
+if __name__ == "__main__":
+
+    instance_filename = "sample_instance"
     # Classical Optimisation Parameters
     optimisation_opts = {
         "classical_opt_alg": "nelder-mead",
@@ -38,32 +101,20 @@ def main():
         "simplex_area_param": 0.1,
     }
 
-    # Initatiate Instance Class for problem
-    instance = QAOAInstance3SAT(
-        n_qubits=n_qubits,
-        single_rotations=single_rotations,
-        double_rotations=double_rotations,
-        triple_rotations=triple_rotations,
-        alpha=[-pi / 2, -pi / 2],
-        beta=[pi / 2, pi / 2],
-        n_rounds=2,
-        classical_opt_alg="nelder-mead",
-        optimiser_opts=optimisation_opts,
+    classical_opt_alg = "nelder-mead"
+
+    alpha_trial = [0]
+    beta_trial = [1]
+    n_rounds = 1
+    track_optimiser = True
+
+    simulate_circuit(
+        instance_filename=instance_filename,
+        classical_opt_alg=classical_opt_alg,
+        optimisation_opts=optimisation_opts,
+        alpha_trial=alpha_trial,
+        beta_trial=beta_trial,
+        n_rounds=n_rounds,
+        track_optimiser=track_optimiser,
+        disp=True,
     )
-
-    instance.build_circuit()
-
-    # Print the circuit being experimented on
-    print(instance.quantum_circuit)
-    # Kick-off run
-    print(
-        "Circuit Iteration %s: \t alpha=%s \t beta=%s \t energy=%s"
-        % (instance.classical_iter, instance.alpha, instance.beta, instance.energy)
-    )
-
-    # Optimise
-    instance.optimise_circuit()
-
-
-if __name__ == "__main__":
-    main()
