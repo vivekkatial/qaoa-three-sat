@@ -16,7 +16,7 @@ from qaoa_three_sat.rotation.rotations import Rotations
 
 
 def build_landscape(
-    instance_filename, classical_opt_alg, optimisation_opts, write_csv=False
+    instance_filename, classical_opt_alg, optimisation_opts, write_csv=False, disp=False
 ):
     """This function generates a landscape for an instance problem. Currently the functions only work on ``n_rounds=1``
 
@@ -26,7 +26,9 @@ def build_landscape(
     :type classical_opt_alg: str
     :param optimisation_opts: Optimisation Algorithm Parameters
     :type optimisation_opts: dict
-    :param write_csv: Bool on writing results to ``csv``, defaults to False
+    :param write_csv: Set to True to write results to ``csv`` file, defaults to False
+    :type write_csv: bool, optional
+    :param write_csv: Set to True to print convergence messages.
     :type write_csv: bool, optional
     :returns: Pandas Dataframe for the instance landscape
     :rtype: pandas.DataFrame
@@ -77,10 +79,12 @@ def build_landscape(
             instance.simulate_circuit()
             instance.measure_energy()
             # Kick-off run
-            print(
-                "Landscape Iteration %s: \t alpha=%s \t beta=%s \t energy=%s"
-                % (iteration, instance.alpha[0], instance.beta[0], instance.energy)
-            )
+            if disp:
+                print(
+                    "Landscape Iteration %s: \t alpha=%s \t beta=%s \t energy=%s"
+                    % (iteration, instance.alpha[0], instance.beta[0], instance.energy)
+                )
+
             sim_dict = {"alpha": alp, "beta": bet, "energy": instance.energy}
             energy_ls.append(sim_dict)
 
@@ -95,6 +99,7 @@ def build_landscape(
         df.to_csv(outfile)
 
     return df
+
 
 if __name__ == "__main__":
 
