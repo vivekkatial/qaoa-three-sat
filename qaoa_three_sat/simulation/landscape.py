@@ -28,7 +28,7 @@ def build_landscape(
     :type optimisation_opts: dict
     :param write_csv: Set to True to write results to ``csv`` file, defaults to False
     :type write_csv: bool, optional
-    :param write_csv: Set to True to print convergence messages.
+    :param write_csv: Set to True to print landscape iteration messages.
     :type write_csv: bool, optional
     :returns: Pandas Dataframe for the instance landscape
     :rtype: pandas.DataFrame

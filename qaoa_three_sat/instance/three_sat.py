@@ -65,6 +65,8 @@ class QAOAInstance3SAT:
             An array containing the beta angle settings at each iteration e.g. ``[[b_0, b_1], ... ]``
         d_energy : list
             An array containing the energy angle settings at each iteration e.g. ``[e_1, ..., e_n]``
+        disp : bool
+            Set to True to print convergence messages.
     """
 
     def __init__(
@@ -79,6 +81,7 @@ class QAOAInstance3SAT:
         classical_opt_alg,
         optimiser_opts,
         track_optimiser=False,
+        disp=False,
         backend=Aer.get_backend("statevector_simulator"),
     ):
 
@@ -98,6 +101,7 @@ class QAOAInstance3SAT:
         self.d_alpha = []
         self.d_beta = []
         self.d_energy = []
+        self.disp = disp
 
         # Quantum SubRoutine Settings
         self.n_rounds = n_rounds
@@ -232,6 +236,17 @@ class QAOAInstance3SAT:
             raise TypeError("track_optimiser must be a bool")
         self._track_optimiser = value
 
+    @property
+    def disp(self):
+        """Get disp param bool"""
+        return self._disp
+
+    @disp.setter
+    def disp(self, value):
+        if not isinstance(value, bool):
+            raise TypeError("disp must be a bool")
+        self._disp = value
+
     def initiate_circuit(self):
         """A function to initiate circuit as a qiskit QC circuit object.
         ...
@@ -329,22 +344,23 @@ class QAOAInstance3SAT:
     def cost_function(self, angles):
         """Circuit Cost function, run the circuit and measure the energy
 
+        [description]
         :param angles: Angle theta found by classical optimiser
-        ...
-        :return: self.energy
-        :rtype: float
+        :type angles: list
+        :returns: self.energy
+        :rtype: {float}
         """
-
         # Update angles
-        print(
-            "Classical Optimization Iteration %s: \t alpha=%s \t beta=%s \t energy=%s"
-            % (
-                self.classical_iter,
-                angles[0 : self.n_rounds],
-                angles[self.n_rounds :],
-                self.energy,
+        if self.disp:
+            print(
+                "Classical Optimization Iteration %s: \t alpha=%s \t beta=%s \t energy=%s"
+                % (
+                    self.classical_iter,
+                    angles[0 : self.n_rounds],
+                    angles[self.n_rounds :],
+                    self.energy,
+                )
             )
-        )
 
         self.alpha = angles[0 : self.n_rounds].tolist()
         self.beta = angles[self.n_rounds :].tolist()
