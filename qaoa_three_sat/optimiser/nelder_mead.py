@@ -16,7 +16,7 @@ class NelderMead:
         vars : list
             A list of variables that need to be optimised (e.g. alpha_i and beta_i)
         cost_function : func
-            A cost function with `callback()` that we're evaluating
+            A cost function with ``callback()`` that we're evaluating
         options : dict
             Optimisation Algorithm Parameters Dictionary.
 
@@ -47,7 +47,6 @@ class NelderMead:
             options={
                 "xtol": self.options["xtol"],
                 "disp": self.options["disp"],
-                # "initial_simplex": simplex,
                 "adaptive": self.options["adaptive"],
             },
         )

@@ -296,8 +296,10 @@ class QAOAInstance3SAT:
             self.quantum_circuit.cx(qubit["qubits"][0], qubit["qubits"][1])
 
     def close_round(self, n_round):
-        """
-        Closing the round of a quantum circuit (then measuring)
+        """Closing the round of a quantum circuit (then measuring)
+
+        :param n_round: Number of rounds to build the circuit for
+        :type n_round: int
         """
         self.quantum_circuit.barrier()
         # Apply X rotations
@@ -344,7 +346,6 @@ class QAOAInstance3SAT:
     def cost_function(self, angles):
         """Circuit Cost function, run the circuit and measure the energy
 
-        [description]
         :param angles: Angle theta found by classical optimiser
         :type angles: list
         :returns: self.energy
