@@ -15,22 +15,25 @@ from qaoa_three_sat.utils.qc_helpers import load_raw_instance, clean_instance
 from qaoa_three_sat.rotation.rotations import Rotations
 
 
-def main():
-    """ Simulate Function"""
+def build_landscape(
+    instance_filename, classical_opt_alg, optimisation_opts, write_csv=False
+):
+    """This function generates a landscape for an instance problem. Currently the functions only work on ``n_rounds=1``
 
-    # Sample Instance
-    instance_file = "data/raw/sample_instance-usa.json"
-
-    # Instance File
-    optimisation_opts = {
-        "xtol": 0.001,
-        "disp": True,
-        "adaptive": True,
-        "simplex_area_param": 0.1,
-        "classical_opt_alg": "nelder-mead",
-    }
+    :param instance_filename: Instance filename
+    :type instance_filename: str
+    :param classical_opt_alg: Name of Classical Optmisation Algorithm
+    :type classical_opt_alg: str
+    :param optimisation_opts: Optimisation Algorithm Parameters
+    :type optimisation_opts: dict
+    :param write_csv: Bool on writing results to ``csv``, defaults to False
+    :type write_csv: bool, optional
+    :returns: Pandas Dataframe for the instance landscape
+    :rtype: pandas.DataFrame
+    """
 
     # Load instance into environment
+    instance_file = "data/raw/%s.json" % instance_filename
     raw_instance = load_raw_instance(instance_file)
 
     # Construct rotation objects
@@ -85,8 +88,30 @@ def main():
         # energy_0 = instance.energy
 
     df = pd.DataFrame(energy_ls)
-    df.to_csv("data/sim_sample_usa.csv")
 
+    # Write data out if required
+    if write_csv:
+        outfile = "data/processed/%s.csv" % instance_filename
+        df.to_csv(outfile)
+
+    return df
 
 if __name__ == "__main__":
-    main()
+
+    instance_filename = "sample_instance"
+
+    # Instance File
+    optimisation_opts = {
+        "xtol": 0.001,
+        "disp": True,
+        "adaptive": True,
+        "simplex_area_param": 0.1,
+        "classical_opt_alg": "nelder-mead",
+    }
+
+    build_landscape(
+        instance_filename=instance_filename,
+        classical_opt_alg="nelder-mead",
+        optimisation_opts=optimisation_opts,
+        write_csv=True,
+    )

@@ -64,7 +64,7 @@ class QAOAInstance3SAT:
         d_beta : list
             An array containing the beta angle settings at each iteration e.g. ``[[b_0, b_1], ... ]``
         d_energy : list
-            An array containing the energy angle settings at each iteration e.g. ``[e_1, ..., e_n]``    
+            An array containing the energy angle settings at each iteration e.g. ``[e_1, ..., e_n]``
     """
 
     def __init__(
@@ -78,7 +78,7 @@ class QAOAInstance3SAT:
         beta,
         classical_opt_alg,
         optimiser_opts,
-        track_optimiser = False,
+        track_optimiser=False,
         backend=Aer.get_backend("statevector_simulator"),
     ):
 
