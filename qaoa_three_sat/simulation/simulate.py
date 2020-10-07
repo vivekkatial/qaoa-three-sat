@@ -21,7 +21,27 @@ def simulate_circuit(
     track_optimiser,
     disp=False,
 ):
-    """ Simulate Function"""
+    """This function simulates an instance of 3SAT on QAOA
+
+    :param instance_filename: Instance filename
+    :type instance_filename: str
+    :param classical_opt_alg: Name of Classical Optmisation Algorithm
+    :type classical_opt_alg: str
+    :param optimisation_opts: Optimisation Algorithm Parameters
+    :type optimisation_opts: dict
+    :param alpha_trial: Initial Guess for alpha
+    :type alpha_trial: list
+    :param beta_trial: Initial Guess for beta
+    :type beta_trial: list
+    :param n_rounds: Number of rounds to build QAOA Circuit
+    :type n_rounds: int
+    :param track_optimiser: Set True, to track classical optimisation metrics on Instance object
+    :type track_optimiser: bool
+    :param disp: Set True, to display classical optimisation steps for algorithm and print circuit, defaults to False
+    :type disp: bool, optional
+    :returns: Instance Object
+    :rtype: {qaoa_three_sat.QAOAInstance3SAT}
+    """
 
     # Load instance into environment
     instance_file = "data/raw/%s.json" % instance_filename
