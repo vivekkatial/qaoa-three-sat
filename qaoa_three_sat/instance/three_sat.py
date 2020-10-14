@@ -413,7 +413,7 @@ class QAOAInstance3SAT:
                 cost_function=self.cost_function,
                 options=self.optimiser_opts,
             )
-        # Run CMA ES    
+        # Run CMA ES
         elif self.classical_opt_alg == "cma-es":
             # Initialise CMA ES
             self.optimiser = CMA_ES(
@@ -424,7 +424,10 @@ class QAOAInstance3SAT:
 
         else:
             # Raise Error if a valid algorithm not specified
-            raise ValueError("Please Specify a valid Algorithm, %s is not implemented" % self.classical_opt_alg)
+            raise ValueError(
+                "Please Specify a valid Algorithm, %s is not implemented"
+                % self.classical_opt_alg
+            )
 
         # Optimise Instance & Circuit
         self.optimiser.optimise()

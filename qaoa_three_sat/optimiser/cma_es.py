@@ -39,6 +39,5 @@ class CMA_ES:
         std = np.std(self.vars_vec)
         vars_vec = self.vars_vec
 
-
         es = cma.CMAEvolutionStrategy(vars_vec, std)
         es.optimize(self.cost_function)
