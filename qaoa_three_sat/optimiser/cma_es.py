@@ -25,12 +25,13 @@ class CMA_ES:
     >>> CMA_ES.optimise()
     """
 
-    def __init__(self, vars_vec, cost_function):
+    def __init__(self, vars_vec, cost_function, options):
         """
         Initialisation method on the class for rotations
         """
         self.vars_vec = vars_vec
         self.cost_function = cost_function
+        self.options = options
 
     def optimise(self):
         """Optimisation Method for CMA-ES"""

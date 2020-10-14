@@ -103,8 +103,8 @@ if __name__ == "__main__":
 
     classical_opt_alg = "nelder-mead"
 
-    alpha_trial = [0]
-    beta_trial = [1]
+    alpha_trial = [pi]
+    beta_trial = [-pi]
     n_rounds = 1
     track_optimiser = True
 
