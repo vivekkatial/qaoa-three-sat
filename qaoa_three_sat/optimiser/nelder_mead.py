@@ -24,6 +24,7 @@ class NelderMead:
     --------
     >>> from qaoa_three_sat.optimiser.nelder_mead import NelderMead
     >>> NelderMead(vars_vec = [0,0], cost_function=rosen, options=opts_dict)
+    >>> NelderMead.optimise()
     """
 
     def __init__(self, vars_vec, cost_function, options):

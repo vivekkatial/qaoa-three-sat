@@ -13,6 +13,7 @@ from qiskit import QuantumCircuit, execute
 from qaoa_three_sat.rotation.rotations import Rotations
 from qaoa_three_sat.utils.qc_helpers import calculate_rotation_angle_theta
 from qaoa_three_sat.optimiser.nelder_mead import NelderMead
+from qaoa_three_sat.optimiser.cma_es import CMA_ES
 
 
 class QAOAInstance3SAT:
@@ -205,7 +206,7 @@ class QAOAInstance3SAT:
         if not isinstance(value, str):
             raise TypeError("classical_opt_alg must be a string")
         # Add optimisers here as implemented
-        if value not in ["nelder-mead"]:
+        if value not in ["nelder-mead", "cma-es"]:
             raise ValueError("classical_opt_alg currently not implemented")
         self._classical_opt_alg = value
 
@@ -412,10 +413,21 @@ class QAOAInstance3SAT:
                 cost_function=self.cost_function,
                 options=self.optimiser_opts,
             )
+        # Run CMA ES
+        elif self.classical_opt_alg == "cma-es":
+            # Initialise CMA ES
+            self.optimiser = CMA_ES(
+                vars_vec=angles,
+                cost_function=self.cost_function,
+                options=self.optimiser_opts,
+            )
 
         else:
             # Raise Error if a valid algorithm not specified
-            raise ValueError("Please Specify an Algorithm")
+            raise ValueError(
+                "Please Specify a valid Algorithm, %s is not implemented"
+                % self.classical_opt_alg
+            )
 
         # Optimise Instance & Circuit
         self.optimiser.optimise()
