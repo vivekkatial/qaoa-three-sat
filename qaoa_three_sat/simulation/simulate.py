@@ -93,18 +93,31 @@ if __name__ == "__main__":
 
     instance_filename = "sample_instance"
     # Classical Optimisation Parameters
+
+    # Nelder-Mead
+    # optimisation_opts = {
+    #     "classical_opt_alg": "nelder-mead",
+    #     "xtol": 0.001,
+    #     "disp": True,
+    #     "adaptive": True,
+    #     "simplex_area_param": 0.1,
+    # }
+
+    # CMA-ES
     optimisation_opts = {
-        "classical_opt_alg": "nelder-mead",
-        "xtol": 0.001,
-        "disp": True,
-        "adaptive": True,
-        "simplex_area_param": 0.1,
+        "classical_opt_alg": "cma-es",
     }
 
-    classical_opt_alg = "nelder-mead"
+    # BFGS
+    # optimisation_opts = {
+    #     "classical_opt_alg": "bfgs",
+    # }
 
-    alpha_trial = [pi]
-    beta_trial = [-pi]
+    # optimisation_opts=None
+    classical_opt_alg = "cma-es" #cma-es, nelder-mead, bfgs
+
+    alpha_trial = [0]
+    beta_trial = [-1]
     n_rounds = 1
     track_optimiser = True
 
