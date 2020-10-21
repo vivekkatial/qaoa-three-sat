@@ -1,0 +1,13 @@
+experiment: 
+  name: "three-sat-usa-qaoa"
+  author: "vivek"
+  tracking-uri: "http://115.146.95.176:5000/"
+  seed: 1032918
+
+build_hamiltonians:
+  params:
+    classical_opt_alg: "{{classical_opt_alg}}"
+    optimisation_opts: "{{optimisation_opts}}"
+    alpha_trial: "{{alpha_trial}}"
+    beta_trial: "{{beta_trial}}"
+    n_rounds: "{{n_rounds}}"
