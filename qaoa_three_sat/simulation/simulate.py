@@ -99,8 +99,12 @@ if __name__ == "__main__":
     # Parsing arguments from CLI
     parser = argparse.ArgumentParser()
     # Adding command line argument
-    parser.add_argument("--instance", type=str)
-    parser.add_argument("--params_file", type=str)
+    parser.add_argument(
+        "-i", "--instance", type=str, help="Name of the instance file being produced"
+    )
+    parser.add_argument(
+        "-p", "--params_file", type=str, help="Parameter file for QAOA run"
+    )
     # Parse your arguments
     args = parser.parse_args()
     run_path = "params/ready/" + args.params_file
