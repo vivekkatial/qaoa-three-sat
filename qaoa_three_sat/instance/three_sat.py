@@ -14,6 +14,7 @@ from qaoa_three_sat.rotation.rotations import Rotations
 from qaoa_three_sat.utils.qc_helpers import calculate_rotation_angle_theta
 from qaoa_three_sat.optimiser.nelder_mead import NelderMead
 from qaoa_three_sat.optimiser.cma_es import CMA_ES
+from qaoa_three_sat.optimiser.bfgs import BFGS
 
 
 class QAOAInstance3SAT:
@@ -206,7 +207,7 @@ class QAOAInstance3SAT:
         if not isinstance(value, str):
             raise TypeError("classical_opt_alg must be a string")
         # Add optimisers here as implemented
-        if value not in ["nelder-mead", "cma-es"]:
+        if value not in ["nelder-mead", "cma-es", "bfgs"]:
             raise ValueError("classical_opt_alg currently not implemented")
         self._classical_opt_alg = value
 
@@ -421,6 +422,14 @@ class QAOAInstance3SAT:
                 cost_function=self.cost_function,
                 options=self.optimiser_opts,
             )
+
+        elif self.classical_opt_alg == "bfgs":
+            # Initialise CMA ES
+            self.optimiser = BFGS(
+                vars_vec=angles,
+                cost_function=self.cost_function,
+                options=self.optimiser_opts,
+            )        
 
         else:
             # Raise Error if a valid algorithm not specified
