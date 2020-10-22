@@ -176,7 +176,7 @@ class QAOAInstance3SAT:
             raise TypeError("alpha must be a list")
         if len(value) != self.n_rounds:
             raise ValueError(
-                "Insufficient alpha parameters passed. Should be %s - User passed %s"
+                "Incorrect number of alpha parameters passed. Should be %s - User passed %s"
                 % (self.n_rounds, len(value))
             )
         self._alpha = value
@@ -192,7 +192,7 @@ class QAOAInstance3SAT:
             raise TypeError("beta must be a list")
         if len(value) != self.n_rounds:
             raise ValueError(
-                "Insufficient beta parameters passed. Should be %s - User passed %s"
+                "Incorrect number of beta parameters passed. Should be %s - User passed %s"
                 % (self.n_rounds, len(value))
             )
         self._beta = value
@@ -429,7 +429,7 @@ class QAOAInstance3SAT:
                 vars_vec=angles,
                 cost_function=self.cost_function,
                 options=self.optimiser_opts,
-            )        
+            )
 
         else:
             # Raise Error if a valid algorithm not specified

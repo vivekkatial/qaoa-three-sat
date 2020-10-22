@@ -1,9 +1,14 @@
-"""Sample simulation script
+""" Simulation script
+
+
 
 Author: Vivek Katial
 """
 
 from math import pi
+import argparse
+import yaml
+import json
 
 # Import Custom Modules
 from qaoa_three_sat.instance.three_sat import QAOAInstance3SAT
@@ -91,34 +96,33 @@ def simulate_circuit(
 
 if __name__ == "__main__":
 
-    instance_filename = "sample_instance"
-    # Classical Optimisation Parameters
+    # Parsing arguments from CLI
+    parser = argparse.ArgumentParser()
+    # Adding command line argument
+    parser.add_argument(
+        "-i", "--instance", type=str, help="Name of the instance file being produced"
+    )
+    parser.add_argument(
+        "-p", "--params_file", type=str, help="Parameter file for QAOA run"
+    )
+    # Parse your arguments
+    args = parser.parse_args()
+    run_path = "params/ready/" + args.params_file
+    instance_filename = args.instance
 
-    # Nelder-Mead
-    # optimisation_opts = {
-    #     "classical_opt_alg": "nelder-mead",
-    #     "xtol": 0.001,
-    #     "disp": True,
-    #     "adaptive": True,
-    #     "simplex_area_param": 0.1,
-    # }
+    print("\nReading yaml file\n")
+    with open(run_path) as file:
+        params = yaml.load(file, Loader=yaml.FullLoader)
 
-    # CMA-ES
-    optimisation_opts = {
-        "classical_opt_alg": "cma-es",
-    }
+    # Optimisation parameters
+    opt_params = params["classical_optimisation"]
 
-    # BFGS
-    # optimisation_opts = {
-    #     "classical_opt_alg": "bfgs",
-    # }
-
-    # optimisation_opts=None
-    classical_opt_alg = "cma-es" #cma-es, nelder-mead, bfgs
-
-    alpha_trial = [0]
-    beta_trial = [-1]
-    n_rounds = 1
+    # Parse params
+    classical_opt_alg = opt_params["classical_opt_alg"]
+    optimisation_opts = eval(opt_params["optimisation_opts"])
+    alpha_trial = json.loads(opt_params["alpha_trial"])
+    beta_trial = json.loads(opt_params["beta_trial"])
+    n_rounds = int(opt_params["n_rounds"])
     track_optimiser = True
 
     simulate_circuit(

@@ -39,8 +39,4 @@ class BFGS:
         vars_vec_0 = self.vars_vec
 
         # Optimise alpha and beta using the cost function <s|H|s>
-        res = minimize(
-            self.cost_function,
-            x0=vars_vec_0,
-            method="BFGS"
-        )
+        res = minimize(self.cost_function, x0=vars_vec_0, method="BFGS")
