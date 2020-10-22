@@ -8,6 +8,7 @@ Author: Vivek Katial
 import numpy as np
 from qiskit import Aer, IBMQ
 from qiskit import QuantumCircuit, execute
+import mlflow
 
 # Custom Modules
 from qaoa_three_sat.rotation.rotations import Rotations
@@ -69,6 +70,8 @@ class QAOAInstance3SAT:
             An array containing the energy angle settings at each iteration e.g. ``[e_1, ..., e_n]``
         disp : bool
             Set to True to print convergence messages.
+        mlflow : bool
+            Set to True to track results on the MLFlow Server
     """
 
     def __init__(
@@ -84,6 +87,7 @@ class QAOAInstance3SAT:
         optimiser_opts,
         track_optimiser=False,
         disp=False,
+        mlflow=False,
         backend=Aer.get_backend("statevector_simulator"),
     ):
 
@@ -104,6 +108,7 @@ class QAOAInstance3SAT:
         self.d_beta = []
         self.d_energy = []
         self.disp = disp
+        self.mlflow = mlflow
 
         # Quantum SubRoutine Settings
         self.n_rounds = n_rounds
@@ -249,6 +254,16 @@ class QAOAInstance3SAT:
             raise TypeError("disp must be a bool")
         self._disp = value
 
+    @property
+    def mlflow(self):
+        return self._mlflow
+
+    @mlflow.setter
+    def mlflow(self, value):
+        if not isinstance(value, bool):
+            raise TypeError("mlflow must be a bool")
+        self._mlflow = value
+
     def initiate_circuit(self):
         """A function to initiate circuit as a qiskit QC circuit object.
         ...
@@ -376,6 +391,9 @@ class QAOAInstance3SAT:
         # Run circuit
         self.simulate_circuit()
         self.measure_energy()
+
+        if self.mlflow:
+            mlflow.log_metric("energy", self.energy)
 
         # If tracking enabled - collect data on alpha, beta
         if self.track_optimiser:

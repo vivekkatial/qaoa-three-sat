@@ -25,6 +25,7 @@ def simulate_circuit(
     n_rounds,
     track_optimiser,
     disp=False,
+    mlflow=False,
 ):
     """This function simulates an instance of 3SAT on QAOA
 
@@ -43,6 +44,8 @@ def simulate_circuit(
     :param track_optimiser: Set True, to track classical optimisation metrics on Instance object
     :type track_optimiser: bool
     :param disp: Set True, to display classical optimisation steps for algorithm and print circuit, defaults to False
+    :type disp: bool, optional
+    :param mlflow: Set True, to track results on an MLFlow server, defaults to False
     :type disp: bool, optional
     :returns: Instance Object
     :rtype: {qaoa_three_sat.QAOAInstance3SAT}
@@ -74,6 +77,7 @@ def simulate_circuit(
         optimiser_opts=optimisation_opts,
         track_optimiser=track_optimiser,
         disp=disp,
+        mlflow=mlflow,
     )
 
     instance.build_circuit()
@@ -95,6 +99,7 @@ def simulate_circuit(
 
 
 if __name__ == "__main__":
+    """ Example run for a simulation """
 
     # Parsing arguments from CLI
     parser = argparse.ArgumentParser()
