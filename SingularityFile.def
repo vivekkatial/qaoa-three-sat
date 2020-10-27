@@ -69,19 +69,31 @@ From: python:3.6.2
 
 %apphelp run_experiment
   This is the help for running experiments. To run an experiment feed the following Arguments: 
-    - ARG_1=<EXPERIMENTAL_CONFIG_YAML_FILE_NAME>
-    - ARG_2=<PARAMETER FILE FOR QAOA>
-    - ARG_3=<MLFLOW TRACKING>
+    - ARG_1=<INSTANCE_FILENAME>
+    - ARG_2=<PARAMETER_FILE_FOR_QAOA>
+    - ARG_3=<MLFLOW_TRACKING>
 
 %applabels run_experiment
   APP_NAME RUNNING_EXPERIMENTS
 
 %apprun run_experiment
+  # Argument Array
+  args_array=("$@")
+  # Print valid arguments
+  echo "INSTANCE_FILENAME=${args_array[0]}"
+  echo "PARAMETER_FILE_FOR_QAOA=${args_array[1]}"
+  echo "MLFLOW_TRACKING=${args_array[2]}"
+  # Parse Arguments
+  export INSTANCE_FILENAME=${args_array[0]}
+  export PARAMETER_FILE_FOR_QAOA=${args_array[1]}
+  export MLFLOW_TRACKING=${args_array[2]}
+
+  # Run experiment
+  python run/main_qaoa.py --instance=$INSTANCE_FILENAME --params_file=$PARAMETER_FILE_FOR_QAOA --track_mlflow=$MLFLOW_TRACKING
 
 
 %runscript
   echo "Container was created $NOW"
-
   echo "Run one of the built apps. You're not running anything!"
 
 %labels
