@@ -89,6 +89,10 @@ target/
 .mypy_cache/
 outcmaes/
 
-# Parameter datafiles
+# Parameter data files
 params/ready/*
 params/completed/*
+
+# Cluster Computing files
+**.img
+.aws/
