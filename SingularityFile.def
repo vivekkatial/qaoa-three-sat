@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: python:3.6
+From: python:3.6.2
 
 
 %environment
@@ -47,18 +47,20 @@ From: python:3.6
   export LANG=en_US.UTF-8
 
   ####################################################
-  # Python Installation
+  # Python / QISKit Installation
   ####################################################
 
-  # pip install -r requirements.txt
+  git clone https://github.com/vivekkatial/qaoa-three-sat.git
+  cd qaoa-three-sat
+  pip install -r requirements.txt
 
   # ####################################################
   # # AWS Installation
   # ####################################################
 
-  # apt-get update
-  # apt-get install -y --no-install-recommends --allow-unauthenticated \
-  #   awscli
+  apt-get update
+  apt-get install -y --no-install-recommends --allow-unauthenticated \
+    awscli
 
 
 ####################################################
