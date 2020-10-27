@@ -3,17 +3,17 @@ From: python:3.6
 
 
 %environment
-    export Author="FENELLA MCANDREW"
+    export Author="Vivek Katial"
     export LC_ALL=C
     export PATH=/usr/games:$PATH
 
     # Declare experiment environment variables
-    EXPERIMENT_NAME=aqc-maxcut
+    EXPERIMENT_NAME=qaoa_three_sat
     # Declare mlflow environment variables
     MLFLOW_S3_ENDPOINT_URL=https://objects.storage.unimelb.edu.au
     MLFLOW_PYTHON_BIN=/usr/local/bin/python
     MLFLOW_BIN=/usr/local/bin/mlflow
-    S3_BUCKET=s3://6200_aqc_maxcut
+    S3_BUCKET=s3://qaoa_three_sat
 
     # Export env vars for LC_ALL
     export LC_ALL=en_US.UTF-8
@@ -30,8 +30,6 @@ From: python:3.6
   cat /etc/os-release
 
   # Software versions
-  export R_VERSION=3.6.1
-
   # Get dependencies
   apt-get update && apt-get install -y gnupg2
   apt-key update
@@ -69,26 +67,13 @@ From: python:3.6
 %apphelp run_experiment
   This is the help for running experiments. To run an experiment feed the following Arguments: 
     - ARG_1=<EXPERIMENTAL_CONFIG_YAML_FILE_NAME>
+    - ARG_2=<PARAMETER FILE FOR QAOA>
+    - ARG_3=<MLFLOW TRACKING>
 
 %applabels run_experiment
   APP_NAME RUNNING_EXPERIMENTS
 
 %apprun run_experiment
-  echo "Container was created $NOW"
-
-  echo "Arguments received: $*"
-
-  # Run experiment with parameter file
-  python _main_.py --run_path=$@
-
-  export LOCAL_FILENAME=$@
-  export LOCAL_PREFIX="params/ready/"
-  export RAW_FILENAME=${LOCAL_FILENAME#"$LOCAL_PREFIX"}
-
-
-  # Move experiment to complete folder
-  echo "\n Completed experiment $@ moving to complete folder"
-  mv $@ params/complete/$RAW_FILENAME
 
 
 %runscript
