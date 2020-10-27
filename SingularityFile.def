@@ -28,6 +28,7 @@ From: python:3.6
 %post
   # Print image info
   cat /etc/os-release
+  ls
 
   # Software versions
   # Get dependencies
