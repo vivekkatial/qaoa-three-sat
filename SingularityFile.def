@@ -50,15 +50,15 @@ From: python:3.6
   # Python Installation
   ####################################################
 
-  pip install -r requirements.txt
+  # pip install -r requirements.txt
 
-  ####################################################
-  # AWS Installation
-  ####################################################
+  # ####################################################
+  # # AWS Installation
+  # ####################################################
 
-  apt-get update
-  apt-get install -y --no-install-recommends --allow-unauthenticated \
-    awscli
+  # apt-get update
+  # apt-get install -y --no-install-recommends --allow-unauthenticated \
+  #   awscli
 
 
 ####################################################
