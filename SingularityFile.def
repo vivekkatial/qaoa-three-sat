@@ -55,9 +55,9 @@ From: python:3.6.2
   cd qaoa-three-sat
   pip install -r requirements.txt
 
-  # ####################################################
-  # # AWS Installation
-  # ####################################################
+  ####################################################
+  # AWS Installation
+  ####################################################
 
   apt-get update
   apt-get install -y --no-install-recommends --allow-unauthenticated \
