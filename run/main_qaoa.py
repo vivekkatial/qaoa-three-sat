@@ -13,6 +13,8 @@ import mlflow
 
 from qaoa_three_sat.simulation.simulate import simulate_circuit
 from qaoa_three_sat.utils.exp_utils import str2bool, make_temp_directory
+from qaoa_three_sat.utils.qc_helpers import calculate_p_success
+
 from os import path
 
 if __name__ == "__main__":
@@ -77,6 +79,10 @@ if __name__ == "__main__":
         mlflow=mlflow_tracking,
         disp=True,
     )
+
+    instance.calculate_pdf()
+
+    calculate_p_success(instance.pdf, instance.n_qubits, instance.sat_assgn)
 
     # Log parameters and metrics
     if mlflow_tracking:

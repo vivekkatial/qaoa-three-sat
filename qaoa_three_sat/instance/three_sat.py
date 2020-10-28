@@ -60,6 +60,8 @@ class QAOAInstance3SAT:
             The energy cost function value being minimised
         pdf : list
             An array representing a probability distribution across all possible states
+        sat_assgn : str
+            A string representing the binary string for the satisfying assignment
         track_optimiser : bool
             A boolean on whether or not tracking of the classical optimizer should be enabled
         d_alpha : list
@@ -85,6 +87,7 @@ class QAOAInstance3SAT:
         beta,
         classical_opt_alg,
         optimiser_opts,
+        sat_assgn,
         track_optimiser=False,
         disp=False,
         mlflow=False,
@@ -102,6 +105,7 @@ class QAOAInstance3SAT:
         self.optimiser = None
         self.classical_iter = 0
         self.track_optimiser = track_optimiser
+        self.sat_assgn = sat_assgn
 
         # Tracking attributes
         self.d_alpha = []
@@ -263,6 +267,17 @@ class QAOAInstance3SAT:
         if not isinstance(value, bool):
             raise TypeError("mlflow must be a bool")
         self._mlflow = value
+
+    @property
+    def sat_assgn(self):
+        return self._sat_assgn
+
+    @sat_assgn.setter
+    def sat_assgn(self, value):
+        if not isinstance(value, str):
+            raise TypeError("sat_assgn must be a string")
+        self._sat_assgn = value
+    
 
     def initiate_circuit(self):
         """A function to initiate circuit as a qiskit QC circuit object.
