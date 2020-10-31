@@ -13,6 +13,8 @@ import mlflow
 
 from qaoa_three_sat.simulation.simulate import simulate_circuit
 from qaoa_three_sat.utils.exp_utils import str2bool, make_temp_directory
+from qaoa_three_sat.utils.qc_helpers import calculate_p_success
+
 from os import path
 
 if __name__ == "__main__":
@@ -78,6 +80,8 @@ if __name__ == "__main__":
         disp=True,
     )
 
+    instance.calculate_pdf()
+
     # Log parameters and metrics
     if mlflow_tracking:
         mlflow.log_param("n_qubits", instance.n_qubits)
@@ -85,6 +89,7 @@ if __name__ == "__main__":
         mlflow.log_param("beta_final", instance.beta)
         mlflow.log_metric("energy", instance.energy)
         mlflow.log_metric("classical_iter", instance.classical_iter)
+        mlflow.log_metric("p_success", calculate_p_success(instance.pdf, instance.n_qubits, instance.sat_assgn))
 
     # Build artifacts in a tmp directory
     with make_temp_directory() as temp_dir:

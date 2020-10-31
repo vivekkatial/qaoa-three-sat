@@ -8,15 +8,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_state_vector(pdf, n_qubits, sat_assign=None):
+def plot_state_vector(pdf, n_qubits, sat_assgn=None):
     """Function to plot probability distribution function for a given state vector
 
     :param pdf: Probability distribution function
     :type pdf: numpy.array
     :param n_qubits: Number of qubits
     :type n_qubits: int
-    :param sat_assign: List of satisfying assignments, defaults to None
-    :type sat_assign: list, optional
+    :param sat_assgn: List of satisfying assignments, defaults to None
+    :type sat_assgn: list, optional
     :returns: Plot of PDF
     :rtype: {matplotlib.plot}
     :raises: TypeError, ValueError
@@ -35,9 +35,9 @@ def plot_state_vector(pdf, n_qubits, sat_assign=None):
     xbars = plt.bar(np.arange(len(pdf)), pdf)
 
     # Color according to best
-    if sat_assign is not None:
-        for ans in sat_assign:
-            xbars[ans].set_color("#DC143C")
+    if sat_assgn is not None:
+        for ans in sat_assgn:
+            sat_assgn[ans].set_color("#DC143C")
 
     plt.xticks(range(8), xlabs, rotation="vertical")
     return plt

@@ -15,7 +15,6 @@ from qaoa_three_sat.instance.three_sat import QAOAInstance3SAT
 from qaoa_three_sat.utils.qc_helpers import load_raw_instance, clean_instance
 from qaoa_three_sat.rotation.rotations import Rotations
 
-
 def simulate_circuit(
     instance_filename,
     classical_opt_alg,
@@ -56,7 +55,7 @@ def simulate_circuit(
     raw_instance = load_raw_instance(instance_file)
 
     # Construct rotation objects
-    n_qubits, single_rotations, double_rotations, triple_rotations = clean_instance(
+    n_qubits, single_rotations, double_rotations, triple_rotations, sat_assgn = clean_instance(
         raw_instance
     )
 
@@ -76,6 +75,7 @@ def simulate_circuit(
         classical_opt_alg=classical_opt_alg,
         optimiser_opts=optimisation_opts,
         track_optimiser=track_optimiser,
+        sat_assgn=sat_assgn,
         disp=disp,
         mlflow=mlflow,
     )
