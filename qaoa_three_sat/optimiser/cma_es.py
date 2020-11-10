@@ -23,6 +23,24 @@ class CMA_ES:
     >>> from qaoa_three_sat.optimiser.nelder_mead import NelderMead
     >>> CMA_ES(vars_vec = [0,0], cost_function=rosen)
     >>> CMA_ES.optimise()
+
+    Details
+    -------
+    Return the list provided in `CMAEvolutionStrategy.result` appended
+    with termination conditions, an `OOOptimizer` and a `BaseDataLogger`::
+        res = es.result + (es.stop(), es, logger)
+
+        where
+        - ``res[0]`` (``xopt``) -- best evaluated solution
+        - ``res[1]`` (``fopt``) -- respective function value
+        - ``res[2]`` (``evalsopt``) -- respective number of function evaluations
+        - ``res[3]`` (``evals``) -- number of overall conducted objective function evaluations
+        - ``res[4]`` (``iterations``) -- number of overall conducted iterations
+        - ``res[5]`` (``xmean``) -- mean of the final sample distribution
+        - ``res[6]`` (``stds``) -- effective stds of the final sample distribution
+        - ``res[-3]`` (``stop``) -- termination condition(s) in a dictionary
+        - ``res[-2]`` (``cmaes``) -- class `CMAEvolutionStrategy` instance
+        - ``res[-1]`` (``logger``) -- class `CMADataLogger` instance
     """
 
     def __init__(self, vars_vec, cost_function, options):
@@ -32,6 +50,8 @@ class CMA_ES:
         self.vars_vec = vars_vec
         self.cost_function = cost_function
         self.options = options
+        self.budget = options["budget"]
+        self.iterations = 1
 
     def optimise(self):
         """Optimisation Method for CMA-ES"""
@@ -39,5 +59,10 @@ class CMA_ES:
         std = np.std(self.vars_vec)
         vars_vec = self.vars_vec
 
-        es = cma.CMAEvolutionStrategy(vars_vec, std)
-        es.optimize(self.cost_function)
+        # Results from CMA-ES process
+        res = cma.fmin(self.cost_function, vars_vec, std, options={'maxfevals': self.budget})
+
+        # Return the best function evaluation
+        self.vars_vec = res[0]
+
+        return 0

@@ -477,9 +477,6 @@ class QAOAInstance3SAT:
         self.optimiser.optimise()
         self.generate_instance_df()
 
-        #
-
-
     def generate_instance_df(self):
         """A function to generate a dataframe containing columns for angles and the minimum energy"""
 
