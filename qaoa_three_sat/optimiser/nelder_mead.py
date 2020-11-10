@@ -4,8 +4,10 @@ Nelder-Mead Optimizer Class
 Author: Vivek Katial
 """
 
+import random
 import numpy as np
 from scipy.optimize import minimize
+from math import pi
 
 
 class NelderMead:
@@ -34,23 +36,34 @@ class NelderMead:
         self.vars_vec = vars_vec
         self.cost_function = cost_function
         self.options = options
+        self.budget = options["budget"]
+        self.iterations = 1
 
     def optimise(self):
         """Optimisation Method for Nelder-Mead"""
-        # Build a simplex (add epsilon to alpha / add epsilon to beta)
-        vars_vec_0 = self.vars_vec
 
-        # Optimise alpha and beta using the cost function <s|H|s>
-        res = minimize(
-            self.cost_function,
-            x0=vars_vec_0,
-            method="nelder-mead",
-            options={
-                "xtol": self.options["xtol"],
-                "disp": self.options["disp"],
-                "adaptive": self.options["adaptive"],
-            },
-        )
+        while self.iterations < self.budget:
+
+            # Create a vector
+            print("Re-generating inital random state")
+            vars_vec_0 = [random.uniform(-pi, pi) for i in range(len(self.vars_vec))]
+
+            # Optimise alpha and beta using the cost function <s|H|s>
+            res = minimize(
+                self.cost_function,
+                x0=vars_vec_0,
+                method="nelder-mead",
+                options={
+                    "xtol": self.options["xtol"],
+                    "disp": self.options["disp"],
+                    "adaptive": self.options["adaptive"],
+                    "maxfev": self.budget - self.iterations,
+                },
+            )
+
+            self.iterations += res.nfev
+
+            print("THIS IS THE ITERATIONS %s" % self.iterations)
 
         # Print result
         print(
@@ -60,4 +73,5 @@ class NelderMead:
                 res.x[int(len(self.vars_vec) / 2) :],
             )
         )
+
         self.vars_vec = res.x

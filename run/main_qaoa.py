@@ -89,7 +89,10 @@ if __name__ == "__main__":
         mlflow.log_param("beta_final", instance.beta)
         mlflow.log_metric("energy", instance.energy)
         mlflow.log_metric("classical_iter", instance.classical_iter)
-        mlflow.log_metric("p_success", calculate_p_success(instance.pdf, instance.n_qubits, instance.sat_assgn))
+        mlflow.log_metric(
+            "p_success",
+            calculate_p_success(instance.pdf, instance.n_qubits, instance.sat_assgn),
+        )
 
     # Build artifacts in a tmp directory
     with make_temp_directory() as temp_dir:
