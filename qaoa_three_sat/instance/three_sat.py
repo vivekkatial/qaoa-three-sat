@@ -514,7 +514,7 @@ class QAOAInstance3SAT:
         d_instance["algorithm"] = self.classical_opt_alg
         d_instance["optimiser_opts"] = str(self.optimiser_opts)
 
-        d_instance = d_instance.loc[[d_instance['energy'].idxmin()]]
+        d_instance = d_instance.loc[[d_instance["energy"].idxmin()]]
         d_instance.to_csv("data/sample_test.csv")
 
         # Allocate data for instance

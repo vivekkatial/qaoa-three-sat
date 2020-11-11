@@ -60,7 +60,9 @@ class CMA_ES:
         vars_vec = self.vars_vec
 
         # Results from CMA-ES process
-        res = cma.fmin(self.cost_function, vars_vec, std, options={'maxfevals': self.budget})
+        res = cma.fmin(
+            self.cost_function, vars_vec, std, options={"maxfevals": self.budget}
+        )
 
         # Return the best function evaluation
         self.vars_vec = res[0]
