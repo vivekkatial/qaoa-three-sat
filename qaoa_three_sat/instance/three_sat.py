@@ -6,6 +6,7 @@ Author: Vivek Katial
 
 # External Modules
 import numpy as np
+import pandas as pd
 from qiskit import Aer, IBMQ
 from qiskit import QuantumCircuit, execute
 import mlflow
@@ -70,6 +71,8 @@ class QAOAInstance3SAT:
             An array containing the beta angle settings at each iteration e.g. ``[[b_0, b_1], ... ]``
         d_energy : list
             An array containing the energy angle settings at each iteration e.g. ``[e_1, ..., e_n]``
+        d_instance : pandas.DataFrame()
+            A pandas dataframe object with data
         disp : bool
             Set to True to print convergence messages.
         mlflow : bool
@@ -126,6 +129,7 @@ class QAOAInstance3SAT:
 
         # Metric settings
         self.quantum_circuit = None
+        self.d_instance = None
         self.energy = 0
 
     @property
@@ -277,7 +281,6 @@ class QAOAInstance3SAT:
         if not isinstance(value, str):
             raise TypeError("sat_assgn must be a string")
         self._sat_assgn = value
-    
 
     def initiate_circuit(self):
         """A function to initiate circuit as a qiskit QC circuit object.
@@ -411,10 +414,9 @@ class QAOAInstance3SAT:
             mlflow.log_metric("energy", self.energy)
 
         # If tracking enabled - collect data on alpha, beta
-        if self.track_optimiser:
-            self.d_alpha.append(self.alpha)
-            self.d_beta.append(self.beta)
-            self.d_energy.append(self.energy)
+        self.d_alpha.append(self.alpha)
+        self.d_beta.append(self.beta)
+        self.d_energy.append(self.energy)
 
         return self.energy
 
@@ -473,6 +475,51 @@ class QAOAInstance3SAT:
 
         # Optimise Instance & Circuit
         self.optimiser.optimise()
+        self.generate_instance_df()
+
+    def generate_instance_df(self):
+        """A function to generate a dataframe containing columns for angles and the minimum energy"""
+
+        # Create alpha key strings
+        l_alpha = ["alpha_" + str(i) for i in range(len(self.alpha))]
+        # Create beta key strings
+        l_beta = ["beta_" + str(i) for i in range(len(self.alpha))]
+        # Create all
+        l_all = [l_alpha, l_beta]
+        l_keys = [item for sublist in l_all for item in sublist]
+        l_keys.append("energy")
+
+        # Data dictionary
+        d_dict = dict.fromkeys(l_keys)
+        d_instance = []
+
+        for row in zip(self.d_alpha, self.d_beta, self.d_energy):
+            # initiate row element
+            row_el = d_dict
+
+            # Build alpha vals df
+            for i, alpha in enumerate(l_alpha):
+                row_el[alpha] = row[0][i]
+
+            # Build beta vals df
+            for i, beta in enumerate(l_beta):
+                row_el[beta] = row[1][i]
+
+            row_el["energy"] = row[2]
+
+            d_instance.append(row_el)
+
+        # Add optimisation stuff
+        d_instance = pd.DataFrame(d_instance)
+        d_instance["algorithm"] = self.classical_opt_alg
+        d_instance["optimiser_opts"] = str(self.optimiser_opts)
+
+        d_instance = d_instance.loc[[d_instance["energy"].idxmin()]]
+        d_instance.to_csv("data/sample_test.csv")
+
+        # Allocate data for instance
+        self.d_instance = d_instance
+        return 0
 
     def calculate_pdf(self):
         """

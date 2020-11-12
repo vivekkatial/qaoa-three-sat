@@ -117,7 +117,7 @@ def load_raw_instance(filename):
 
 def clean_instance(raw_instance):
     """Function to extract different qubit rotations from instance.
-    
+
     :param raw_instance: The raw instance as a dictionary
     :type raw_instance: dict
     :returns: n_qubits, single_rotations, double_rotations, triple_rotations
@@ -150,9 +150,10 @@ def calculate_rotation_angle_theta(alpha, r_coeff):
     theta = -2 * alpha * r_coeff
     return theta
 
+
 def calculate_p_success(pdf, n_qubits, sat_assgn):
     """Calculate the probability of success for the satisfying assignment
-    
+
     :param pdf: Probability distribution as a list
     :type pdf: list
     :param n_qubits: Number of qubits
@@ -165,4 +166,3 @@ def calculate_p_success(pdf, n_qubits, sat_assgn):
     format_str = "{0:0%sb}" % (n_qubits)
     instance_space = [format_str.format(i) for i in range(2 ** n_qubits)]
     return pdf[instance_space.index(sat_assgn)]
-
