@@ -85,11 +85,8 @@ From: python:3.6.2
   echo "Arguments received: $*"
   exec echo "$@"
   echo $args_array
-  stringarray=($args_array)
-  echo ${stringarray[0]}
-  echo ${args_array[0]}
-  echo ${args_array[1]}
-
+  echo $args_array[0]
+  echo $args_array[1]
 
   # Parse Arguments
   # export INSTANCE_FILENAME=${args_array[0]}
