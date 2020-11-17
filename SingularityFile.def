@@ -83,7 +83,7 @@ From: python:3.6.2
   # Print valid arguments
   echo $args_array
   oldIFS=$IFS
-  IFS="|"
+  IFS="::"
   set -- $args_array
   echo "$1"
   echo "$2"
