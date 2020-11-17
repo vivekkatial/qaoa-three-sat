@@ -81,16 +81,17 @@ From: python:3.6.2
   # Argument Array
   args_array=("$@")
   # Print valid arguments
-  echo "INSTANCE_FILENAME=${args_array[0]}"
-  echo "PARAMETER_FILE_FOR_QAOA=${args_array[1]}"
-  echo "MLFLOW_TRACKING=${args_array[2]}"
+  echo "Container was created $NOW"
+  echo "Arguments received: $*"
+  exec echo "$@"
+  echo $args_array
   # Parse Arguments
-  export INSTANCE_FILENAME=${args_array[0]}
-  export PARAMETER_FILE_FOR_QAOA=${args_array[1]}
-  export MLFLOW_TRACKING=${args_array[2]}
+  # export INSTANCE_FILENAME=${args_array[0]}
+  # export PARAMETER_FILE_FOR_QAOA=${args_array[1]}
+  # export MLFLOW_TRACKING=${args_array[2]}
 
   # Run experiment
-  python run/main_qaoa.py --instance=$INSTANCE_FILENAME --params_file=$PARAMETER_FILE_FOR_QAOA --track_mlflow=$MLFLOW_TRACKING
+  # python run/main_qaoa.py --instance=$INSTANCE_FILENAME --params_file=$PARAMETER_FILE_FOR_QAOA --track_mlflow=$MLFLOW_TRACKING
 
 
 %runscript
