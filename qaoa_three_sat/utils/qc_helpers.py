@@ -166,3 +166,5 @@ def calculate_p_success(pdf, n_qubits, sat_assgn):
     format_str = "{0:0%sb}" % (n_qubits)
     instance_space = [format_str.format(i) for i in range(2 ** n_qubits)]
     return pdf[instance_space.index(sat_assgn)]
+
+
