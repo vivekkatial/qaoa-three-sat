@@ -79,12 +79,13 @@ From: python:3.6.2
 
 %apprun run_experiment
   # Argument Array
-  args_array="$@"
+  args_array="$*"
   # Print valid arguments
   echo "Container was created"
-  echo "Arguments received: $*"
-  # Allocate and parse 2 arguments
-  IFS="@" read inst qaoa tracking<<< "$args_array"
+  echo "Arguments received: $args_array"
+  echo "Allocating to bash variables"
+  # Allocate and parse 3 arguments
+  IFS=";" read inst qaoa tracking<<< "$args_array"
   echo "inst=$inst, qaoa=$qaoa, tracking=$tracking"
 
   # Parse Arguments
