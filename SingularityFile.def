@@ -79,16 +79,22 @@ From: python:3.6.2
 
 %apprun run_experiment
   # Argument Array
-  args_array=("$@")
+  args_array="$@"
   # Print valid arguments
-  echo "INSTANCE_FILENAME=${args_array[0]}"
-  echo "PARAMETER_FILE_FOR_QAOA=${args_array[1]}"
-  echo "MLFLOW_TRACKING=${args_array[2]}"
-  # Parse Arguments
-  export INSTANCE_FILENAME=${args_array[0]}
-  export PARAMETER_FILE_FOR_QAOA=${args_array[1]}
-  export MLFLOW_TRACKING=${args_array[2]}
+  echo $args_array
 
+  # Parse input args in Dash
+  oldIFS=$IFS
+  IFS=":"
+  set -- $args_array
+  echo "INSTANCE_FILENAME=$1"
+  echo "PARAMETER_FILE_FOR_QAOA=$2"
+  echo "MLFLOW_TRACKING=$3"      
+  export INSTANCE_FILENAME="$1"
+  export PARAMETER_FILE_FOR_QAOA="$2"
+  export MLFLOW_TRACKING="$3"
+  IFS=$oldIFS
+  
   # Run experiment
   python run/main_qaoa.py --instance=$INSTANCE_FILENAME --params_file=$PARAMETER_FILE_FOR_QAOA --track_mlflow=$MLFLOW_TRACKING
 

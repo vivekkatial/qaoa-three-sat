@@ -6,6 +6,7 @@ Author: Vivek Katial
 """
 
 from math import pi
+from os import path
 import argparse
 import yaml
 import json
@@ -15,7 +16,7 @@ from qaoa_three_sat.simulation.simulate import simulate_circuit
 from qaoa_three_sat.utils.exp_utils import str2bool, make_temp_directory
 from qaoa_three_sat.utils.qc_helpers import calculate_p_success
 
-from os import path
+
 
 if __name__ == "__main__":
 
@@ -45,7 +46,7 @@ if __name__ == "__main__":
 
     # Read in parameter file
     with open(run_path) as file:
-        params = yaml.load(file, Loader=yaml.FullLoader)
+        params = json.load(file)
 
     # MlFlow Configuration
     if mlflow_tracking:
