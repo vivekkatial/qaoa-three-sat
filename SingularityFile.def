@@ -82,21 +82,21 @@ From: python:3.6.2
   args_array="$@"
   # Print valid arguments
   echo $args_array
+
+  # Parse input args in Dash
   oldIFS=$IFS
-  IFS="::"
+  IFS=":"
   set -- $args_array
-  echo "$1"
-  echo "$2"
-  echo "$3"      # Note: if more than $9 you need curly braces e.g. "${10}"
+  echo "INSTANCE_FILENAME=$1"
+  echo "PARAMETER_FILE_FOR_QAOA=$2"
+  echo "MLFLOW_TRACKING=$3"      
+  export INSTANCE_FILENAME="$1"
+  export PARAMETER_FILE_FOR_QAOA="$2"
+  export MLFLOW_TRACKING="$3"
   IFS=$oldIFS
-
-  # Parse Arguments
-  # export INSTANCE_FILENAME=${args_array[0]}
-  # export PARAMETER_FILE_FOR_QAOA=${args_array[1]}
-  # export MLFLOW_TRACKING=${args_array[2]}
-
+  
   # Run experiment
-  # python run/main_qaoa.py --instance=$INSTANCE_FILENAME --params_file=$PARAMETER_FILE_FOR_QAOA --track_mlflow=$MLFLOW_TRACKING
+  python run/main_qaoa.py --instance=$INSTANCE_FILENAME --params_file=$PARAMETER_FILE_FOR_QAOA --track_mlflow=$MLFLOW_TRACKING
 
 
 %runscript
