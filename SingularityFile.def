@@ -83,10 +83,9 @@ From: python:3.6.2
   # Print valid arguments
   echo "Container was created"
   echo "Arguments received: $*"
-  exec echo "$@"
-  echo $args_array
-  echo $args_array[0]
-  echo $args_array[1]
+  # Allocate and parse 2 arguments
+  IFS="@" read inst qaoa tracking<<< "$args_array"
+  echo "inst=$inst, qaoa=$qaoa, tracking=$tracking"
 
   # Parse Arguments
   # export INSTANCE_FILENAME=${args_array[0]}
