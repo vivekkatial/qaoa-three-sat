@@ -81,10 +81,16 @@ From: python:3.6.2
   # Argument Array
   args_array="$@"
   # Print valid arguments
-  echo "Container was created $NOW"
+  echo "Container was created"
   echo "Arguments received: $*"
   exec echo "$@"
   echo $args_array
+  stringarray=($args_array)
+  echo ${stringarray[0]}
+  echo ${args_array[0]}
+  echo ${args_array[1]}
+
+
   # Parse Arguments
   # export INSTANCE_FILENAME=${args_array[0]}
   # export PARAMETER_FILE_FOR_QAOA=${args_array[1]}
