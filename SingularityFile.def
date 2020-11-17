@@ -79,14 +79,16 @@ From: python:3.6.2
 
 %apprun run_experiment
   # Argument Array
-  args_array="$*"
+  args_array="$@"
   # Print valid arguments
-  echo "Container was created"
-  echo "Arguments received: $args_array"
-  echo "Allocating to bash variables"
-  # Allocate and parse 3 arguments
-  IFS=";" read inst qaoa tracking<<< "$args_array"
-  echo "inst=$inst, qaoa=$qaoa, tracking=$tracking"
+  echo $args_array
+  oldIFS=$IFS
+  IFS="|"
+  set -- $args_array
+  echo "$1"
+  echo "$2"
+  echo "$3"      # Note: if more than $9 you need curly braces e.g. "${10}"
+  IFS=$oldIFS
 
   # Parse Arguments
   # export INSTANCE_FILENAME=${args_array[0]}
