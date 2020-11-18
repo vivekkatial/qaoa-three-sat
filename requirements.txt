@@ -113,7 +113,7 @@ python-editor==1.0.4
 pytz==2020.1
 PyYAML==5.3.1
 pyzmq==19.0.0
--e git+https://github.com/vivekkatial/qaoa-three-sat.git@826db8cace6f4cab2eacb150fd170ef7d6663301#egg=qaoa_three_sat
+-e git+https://github.com/vivekkatial/qaoa-three-sat.git@be33aac5f19bbaa5a7ba3facc8d359374ccc89d4#egg=qaoa_three_sat
 qiskit==0.21.0
 qiskit-aer==0.6.1
 qiskit-aqua==0.7.5
