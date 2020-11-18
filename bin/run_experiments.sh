@@ -32,8 +32,3 @@ do
       sbatch --mem $NodeMemory --output=$log_file bin/run-experiments.slurm $exp_run_params
     done
 done
-
-for inst in ../healthy_data/*
-do 
-
-done

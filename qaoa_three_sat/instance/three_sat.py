@@ -410,9 +410,6 @@ class QAOAInstance3SAT:
         self.simulate_circuit()
         self.measure_energy()
 
-        if self.mlflow:
-            mlflow.log_metric("energy", self.energy)
-
         # If tracking enabled - collect data on alpha, beta
         self.d_alpha.append(self.alpha)
         self.d_beta.append(self.beta)
