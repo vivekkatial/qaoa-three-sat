@@ -14,10 +14,10 @@ do
 
       # Define run_file and log_file
       classical_prefix="params/ready/"
-      instance_prefix="data/raw/"
-
       classical_no_prefix=${classical#"$classical_prefix"}
-      inst_no_prefix=${inst#"$instance_prefix"}
+      
+      inst_file=$(awk -F/ '{split($NF,temp,"."); print temp[1]}' <<<"$inst")
+      printf "%s\n" "$inst_file"
 
       export log_file=logs/$classical_no_prefix_$inst_no_prefix.log
 
@@ -29,10 +29,15 @@ do
       NodeMemory=10GB
       echo "Allocating node $NodeMemory memory for experiment $classical"
 
-      exp_run_params="$inst_no_prefix:$classical_no_prefix:True"
+      exp_run_params="$inst_file:$classical_no_prefix:True"
 
       # Run experiment as an instance of the singularity container
       echo $exp_run_params
       sbatch --mem $NodeMemory --output=$log_file bin/run-experiments.slurm $exp_run_params
     done
+done
+
+for inst in ../healthy_data/*
+do 
+
 done
