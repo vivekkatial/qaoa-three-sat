@@ -1,0 +1,38 @@
+#!/bin/bash
+
+set -e
+
+classical_opt_dir=params/ready
+instance_dir=data/raw
+
+for inst in $instance_dir/*
+do
+    for classical in $classical_opt_dir/*
+    do
+      local_run_path=$classical
+      echo -e "Submitting job: \n Instance: \t $inst \n Run File: \t $classical"
+
+      # Define run_file and log_file
+      classical_prefix="params/ready/"
+      instance_prefix="data/raw/"
+
+      classical_no_prefix=${classical#"$classical_prefix"}
+      inst_no_prefix=${inst#"$instance_prefix"}
+
+      export log_file=logs/$classical_no_prefix_$inst_no_prefix.log
+
+      echo -e "Logging results: \t $log_file"
+
+      # Identify number of qubits
+      # N_QUBITS=$(echo $local_run_path | grep -oP '(?<=n_qubits)[0-9]+')
+
+      NodeMemory=10GB
+      echo "Allocating node $NodeMemory memory for experiment $classical"
+
+      exp_run_params="$inst_no_prefix:$classical_no_prefix:True"
+
+      # Run experiment as an instance of the singularity container
+      echo $exp_run_params
+      sbatch --mem $NodeMemory --output=$log_file bin/run-experiments.slurm $exp_run_params
+    done
+done
