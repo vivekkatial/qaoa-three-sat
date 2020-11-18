@@ -19,10 +19,6 @@ do
       inst_file=$(awk -F/ '{split($NF,temp,"."); print temp[1]}' <<<"$inst")
       printf "%s\n" "$inst_file"
 
-      export log_file=logs/$classical_no_prefix_$inst_no_prefix.log
-
-      echo -e "Logging results: \t $log_file"
-
       # Identify number of qubits
       # N_QUBITS=$(echo $local_run_path | grep -oP '(?<=n_qubits)[0-9]+')
 
@@ -30,7 +26,7 @@ do
       echo "Allocating node $NodeMemory memory for experiment $classical"
 
       exp_run_params="$inst_file:$classical_no_prefix:True"
-
+      log_file="logs/$exp_run_params.log"
       # Run experiment as an instance of the singularity container
       echo $exp_run_params
       sbatch --mem $NodeMemory --output=$log_file bin/run-experiments.slurm $exp_run_params
