@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: python:3.6.2
+From: python:3.8.2
 
 
 %environment
