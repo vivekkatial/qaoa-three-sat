@@ -33,7 +33,7 @@ do
 
       # Run experiment as an instance of the singularity container
       echo $exp_run_params
-      # sbatch --mem $NodeMemory --output=$log_file bin/run-experiments.slurm $exp_run_params
+      sbatch --mem $NodeMemory --output=$log_file bin/run-experiments.slurm $exp_run_params
     done
 done
 
