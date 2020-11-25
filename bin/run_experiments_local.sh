@@ -31,6 +31,6 @@ do
       PARAMETER_FILE_FOR_QAOA=$classical_no_prefix
       MLFLOW_TRACKING="True"
       python run/main_qaoa.py --instance=$INSTANCE_FILENAME --params_file=$PARAMETER_FILE_FOR_QAOA --track_mlflow=$MLFLOW_TRACKING || True
-      mv classical params/complete/.
+      mv $classical params/complete/.
     done
 done

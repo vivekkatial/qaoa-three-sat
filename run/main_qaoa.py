@@ -105,3 +105,4 @@ if __name__ == "__main__":
         instance.quantum_circuit.draw("mpl", filename=circuit_path)
         if mlflow_tracking:
             mlflow.log_artifact(circuit_path)
+            mlflow.log_artifact(run_path)
