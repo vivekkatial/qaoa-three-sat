@@ -6,6 +6,8 @@ Author: Vivek Katial
 
 import numpy as np
 import cma
+import random
+from math import pi
 
 
 class CMA_ES:
@@ -58,10 +60,11 @@ class CMA_ES:
 
         std = np.std(self.vars_vec)
         vars_vec = self.vars_vec
+        vars_vec_0 = [random.uniform(-pi, pi) for i in range(len(self.vars_vec))]
 
         # Results from CMA-ES process
         res = cma.fmin(
-            self.cost_function, vars_vec, std, options={"maxfevals": self.budget}
+            self.cost_function, vars_vec_0, std, options={"maxfevals": self.budget}
         )
 
         # Return the best function evaluation

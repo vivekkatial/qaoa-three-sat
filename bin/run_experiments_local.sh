@@ -21,14 +21,15 @@ do
 
       # Identify number of qubits
       # N_QUBITS=$(echo $local_run_path | grep -oP '(?<=n_qubits)[0-9]+')
-
-      NodeMemory=10GB
       echo "Allocating node $NodeMemory memory for experiment $classical"
 
       exp_run_params="$inst_file:$classical_no_prefix:True"
       log_file="logs/$exp_run_params.log"
       # Run experiment as an instance of the singularity container
       echo $exp_run_params
-      sbatch --mem $NodeMemory --output=$log_file bin/run-experiments.slurm $exp_run_params
+      INSTANCE_FILENAME=$inst_file
+      PARAMETER_FILE_FOR_QAOA=$classical_no_prefix
+      MLFLOW_TRACKING="True"
+      python run/main_qaoa.py --instance=$INSTANCE_FILENAME --params_file=$PARAMETER_FILE_FOR_QAOA --track_mlflow=$MLFLOW_TRACKING || True
     done
 done

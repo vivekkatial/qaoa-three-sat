@@ -85,7 +85,10 @@ if __name__ == "__main__":
 
     # Log parameters and metrics
     if mlflow_tracking:
+        mlflow.log_param("instance", args.instance)
+        mlflow.log_param("params_file", args.params_file)
         mlflow.log_param("n_qubits", instance.n_qubits)
+        mlflow.log_param("budget", optimisation_opts["budget"])
         mlflow.log_param("alpha_final", instance.alpha)
         mlflow.log_param("beta_final", instance.beta)
         mlflow.log_metric("energy", instance.energy)
@@ -103,3 +106,4 @@ if __name__ == "__main__":
         if mlflow_tracking:
             mlflow.log_artifact(circuit_path)
             mlflow.log_artifact(run_path)
+            mlflow.log_artifact()
