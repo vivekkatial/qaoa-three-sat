@@ -1,0 +1,2 @@
+singularity instance start portable-image.img experiment
+singularity exec instance://experiment bash bin/run_experiments_local.sh 
