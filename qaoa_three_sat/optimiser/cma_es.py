@@ -58,7 +58,6 @@ class CMA_ES:
     def optimise(self):
         """Optimisation Method for CMA-ES"""
 
-        
         vars_vec = self.vars_vec
         vars_vec_0 = [random.uniform(-pi, pi) for i in range(len(self.vars_vec))]
         std = np.std(vars_vec_0)

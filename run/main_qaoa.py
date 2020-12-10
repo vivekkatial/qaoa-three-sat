@@ -17,7 +17,6 @@ from qaoa_three_sat.utils.exp_utils import str2bool, make_temp_directory
 from qaoa_three_sat.utils.qc_helpers import *
 
 
-
 if __name__ == "__main__":
 
     # Parsing arguments from CLI
