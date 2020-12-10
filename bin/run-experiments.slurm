@@ -7,7 +7,7 @@
 #SBATCH --ntasks=1
 
 # set your minimum acceptable walltime=hours:minutes:seconds
-#SBATCH -t 10-23:59:59
+#SBATCH -t 00-23:59:59
 
 # Specify your email address to be notified of progress.
 ### SBATCH --mail-user=vkatial@student.unimelb.edu.au

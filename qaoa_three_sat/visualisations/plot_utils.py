@@ -39,5 +39,5 @@ def plot_state_vector(pdf, n_qubits, sat_assgn=None):
         for ans in sat_assgn:
             sat_assgn[ans].set_color("#DC143C")
 
-    plt.xticks(range(2**n_qubits), xlabs, rotation="vertical")
+    plt.xticks(range(2 ** n_qubits), xlabs, rotation="vertical")
     return plt
